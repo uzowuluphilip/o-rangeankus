@@ -1,4 +1,4 @@
-# Orange Bank Frontend
+# O-rangeankus Frontend
 
 A production-ready banking frontend built with Vite, React, and Bootstrap 5. This application provides a secure, responsive interface for users to manage their accounts, perform transfers, and view transactions.
 
