@@ -1,0 +1,323 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import DashboardLayout from '../layouts/DashboardLayout'
+import axiosInstance from '../api/axios'
+import { DollarSign, Lightbulb } from 'lucide-react'
+
+/**
+ * Wire Transfer Page
+ * 
+ * Features:
+ * - Form for wire transfer details
+ * - Recipient name, bank, account number, amount
+ * - Validation
+ * - POST /transfer/wire endpoint
+ * - Success/error notifications
+ */
+const WireTransfer = () => {
+  const [formData, setFormData] = useState({
+    recipientName: '',
+    bank: '',
+    accountNumber: '',
+    routingNumber: '',
+    amount: '',
+    purpose: ''
+  })
+  const [accountBalance, setAccountBalance] = useState(0)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
+  // Handle form field changes
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // Validate form inputs
+  const validateForm = () => {
+    if (!formData.recipientName.trim()) {
+      setError('Recipient name is required')
+      return false
+    }
+    if (!formData.bank.trim()) {
+      setError('Bank name is required')
+      return false
+    }
+    if (!formData.accountNumber.trim()) {
+      setError('Account number is required')
+      return false
+    }
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      setError('Please enter a valid amount')
+      return false
+    }
+    return true
+  }
+
+  React.useEffect(() => {
+    const loadBalance = async () => {
+      try {
+        const response = await axiosInstance.get('/transactions/balance')
+        const balanceData = response.data.data || response.data
+        setAccountBalance(parseFloat(balanceData.total_balance || 0))
+      } catch (err) {
+        console.error('[WireTransfer] Failed to fetch balance', err)
+      }
+    }
+
+    loadBalance()
+  }, [])
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (!validateForm()) return
+
+    if (parseFloat(formData.amount) > accountBalance) {
+      setError('Insufficient balance. Please use Direct Deposit or top up your account.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await axiosInstance.post('/transactions/simulate', {
+        type: 'wire',
+        recipient_name: formData.recipientName,
+        bank: formData.bank,
+        account_number: formData.accountNumber,
+        routing_number: formData.routingNumber,
+        amount: parseFloat(formData.amount),
+        purpose: formData.purpose
+      })
+
+      setSuccess('Wire transfer initiated successfully!')
+      
+      // Reset form
+      setFormData({
+        recipientName: '',
+        bank: '',
+        accountNumber: '',
+        amount: '',
+        purpose: ''
+      })
+
+      // Redirect to dashboard after 2 seconds
+      setTimeout(() => navigate('/dashboard'), 2000)
+    } catch (err) {
+      const message = err.response?.data?.message || 'Wire transfer failed. Please try again.'
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <DashboardLayout>
+      <div className="mb-5">
+        <h1 className="h3 text-primary-text mb-2"><DollarSign size={28} className="me-2" style={{display: 'inline-block'}} /> Wire Transfer</h1>
+        <p className="text-secondary">Send money domestically</p>
+        <p className="text-secondary">Available balance: ${accountBalance.toFixed(2)}</p>
+      </div>
+
+      <div className="row">
+        <div className="col-12 col-lg-8">
+          <div className="card">
+            <div className="card-body p-4">
+              {/* Error alert */}
+              {error && (
+                <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                  {error}
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setError('')}
+                  ></button>
+                </div>
+              )}
+
+              {/* Success alert */}
+              {success && (
+                <div className="alert alert-success alert-dismissible fade show" role="alert">
+                  {success}
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setSuccess('')}
+                  ></button>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit}>
+                {/* Recipient Name */}
+                <div className="mb-4">
+                  <label htmlFor="recipientName" className="form-label text-primary-text">
+                    Recipient Name <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="recipientName"
+                    name="recipientName"
+                    value={formData.recipientName}
+                    onChange={handleChange}
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Bank Name */}
+                <div className="mb-4">
+                  <label htmlFor="bank" className="form-label text-primary-text">
+                    Bank Name <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="bank"
+                    name="bank"
+                    value={formData.bank}
+                    onChange={handleChange}
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Account Number */}
+                <div className="mb-4">
+                  <label htmlFor="accountNumber" className="form-label text-primary-text">
+                    Account Number <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="accountNumber"
+                    name="accountNumber"
+                    value={formData.accountNumber}
+                    onChange={handleChange}
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Routing Number */}
+                <div className="mb-4">
+                  <label htmlFor="routingNumber" className="form-label text-primary-text">
+                    Routing Number <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="routingNumber"
+                    name="routingNumber"
+                    value={formData.routingNumber}
+                    onChange={handleChange}
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Amount */}
+                <div className="mb-4">
+                  <label htmlFor="amount" className="form-label text-primary-text">
+                    Amount (USD) <span className="text-danger">*</span>
+                  </label>
+                  <div className="input-group">
+                    <span className="input-group-text bg-dark border-secondary text-primary-orange">$</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="amount"
+                      name="amount"
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      value={formData.amount}
+                      onChange={handleChange}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
+
+                {/* Purpose */}
+                <div className="mb-4">
+                  <label htmlFor="purpose" className="form-label text-primary-text">
+                    Purpose (Optional)
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="purpose"
+                    name="purpose"
+                    placeholder="Bill payment, savings, etc."
+                    rows="3"
+                    value={formData.purpose}
+                    onChange={handleChange}
+                    disabled={loading}
+                  ></textarea>
+                </div>
+
+                {/* Buttons */}
+                <div className="d-grid gap-2 d-sm-flex">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Processing...
+                      </>
+                    ) : (
+                      'Send Transfer'
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => navigate('/dashboard')}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* Info box */}
+          <div className="card mt-4 border-info">
+            <div className="card-body">
+              <h6 className="card-title text-info mb-2">ℹ️ Information</h6>
+              <ul className="small text-secondary mb-0">
+                <li>Wire transfers are processed immediately</li>
+                <li>You cannot cancel once submitted</li>
+                <li>Standard bank fees may apply</li>
+                <li>Recipient must have a valid bank account</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Right sidebar - Quick tips */}
+        <div className="col-12 col-lg-4">
+          <div className="card bg-dark">
+            <div className="card-body">
+              <h6 className="card-title text-primary-orange mb-3"><Lightbulb size={20} className="me-2" style={{display: 'inline-block'}} /> Tips</h6>
+              <ul className="small text-secondary mb-0 ps-3">
+                <li className="mb-2">Double-check the account number before submitting</li>
+                <li className="mb-2">Transfers to the same bank are faster</li>
+                <li className="mb-2">Keep the reference number for tracking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  )
+}
+
+export default WireTransfer
