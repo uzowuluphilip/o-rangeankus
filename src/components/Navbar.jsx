@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { LogOut, Menu } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import LanguageSwitcher from './LanguageSwitcher'
 import './Navbar.css'
 import BankLogo from './BankLogo'
 
@@ -53,9 +54,10 @@ const Navbar = () => {
         {/* Navigation links - collapsible menu */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <div className="navbar-nav ms-auto w-100 d-flex flex-column flex-lg-row align-items-lg-center gap-3">
-            {/* Theme Toggle */}
-            <div className="d-flex align-items-center">
+            {/* Theme Toggle & Language Switcher */}
+            <div className="d-flex align-items-center gap-2">
               <ThemeToggle />
+              <LanguageSwitcher />
             </div>
 
             {/* User Info and Logout */}
