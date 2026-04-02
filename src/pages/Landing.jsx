@@ -287,7 +287,7 @@ const Landing = () => {
             <h4>Support</h4>
             <ul>
               <li>Email: support@orangeankus.com</li>
-              <li>Phone: 1123347638</li>g
+              <li>Phone: 1123347638</li>
             </ul>
           </div>
         </div>
