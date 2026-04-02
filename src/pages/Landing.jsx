@@ -286,9 +286,8 @@ const Landing = () => {
           <div className="footer-section">
             <h4>Support</h4>
             <ul>
-              <li><a href="#">Help Center</a></li>
               <li>Email: support@orangeankus.com</li>
-              <li>Phone: 1123347638</li>
+              <li>Phone: 1123347638</li>g
             </ul>
           </div>
         </div>
