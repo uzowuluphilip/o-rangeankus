@@ -328,6 +328,17 @@
       "title": "Seguridad",
       "description": "Tu información de cuenta está encriptada y segura. Solo comparte números de ruta y cuenta con empleadores de confianza."
     },
+    "setup": {
+      "title": "Cómo Configurar el Depósito Directo",
+      "step1Title": "Proporcionar Empleador",
+      "step1Desc": "Comparte el número de ruta y el número de cuenta con el departamento de nómina de tu empleador",
+      "step2Title": "Completar Autorización",
+      "step2Desc": "Firma los documentos requeridos (usa nuestro formulario descargable si es necesario)",
+      "step3Title": "Esperar Verificación",
+      "step3Desc": "Los depósitos directos generalmente comienzan dentro de 1-2 ciclos de pago",
+      "step4Title": "Rastrear Pago",
+      "step4Desc": "Monitorea tu página de transacciones para depósitos entrantes"
+    },
     "needHelp": {
       "title": "¿Necesitas Ayuda?",
       "description": "Contacta a nuestro equipo de soporte si tienes preguntas sobre depósitos directos."

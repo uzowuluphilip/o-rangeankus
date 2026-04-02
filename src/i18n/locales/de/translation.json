@@ -326,6 +326,17 @@
       "title": "Sicherheit",
       "description": "Ihre Kontoinformationen sind verschlüsselt und sicher. Teilen Sie Routing- und Kontonummern nur mit vertrauenswürdigen Arbeitgebern."
     },
+    "setup": {
+      "title": "Direkteinzahlung einrichten",
+      "step1Title": "Arbeitgeber bereitstellen",
+      "step1Desc": "Teilen Sie die Routing-Nummer und Kontonummer mit der Gehaltsabteilung Ihres Arbeitgebers",
+      "step2Title": "Autorisierung abschließen",
+      "step2Desc": "Unterzeichnen Sie erforderliche Dokumente (verwenden Sie ggf. unser herunterladbares Formular)",
+      "step3Title": "Auf Bestätigung warten",
+      "step3Desc": "Direkteinzahlungen finden normalerweise innerhalb von 1-2 Lohnzahlungszyklen statt",
+      "step4Title": "Zahlung verfolgen",
+      "step4Desc": "Überwachen Sie Ihre Transaktionsseite auf eingehende Einzahlungen"
+    },
     "needHelp": {
       "title": "Benötigst du Hilfe?",
       "description": "Wenden Sie sich an unser Support-Team, wenn Sie Fragen zu Direkteinzahlungen haben."

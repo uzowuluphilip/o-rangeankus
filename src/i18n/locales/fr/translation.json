@@ -322,6 +322,17 @@
       "title": "Sécurité",
       "description": "Les informations de votre compte sont chiffrées et sécurisées. Partagez uniquement les numéros d'acheminement et de compte avec les employeurs de confiance."
     },
+    "setup": {
+      "title": "Comment Configurer le Dépôt Direct",
+      "step1Title": "Fournir l'Employeur",
+      "step1Desc": "Partagez le numéro d'acheminement et le numéro de compte avec le service de paie de votre employeur",
+      "step2Title": "Compléter l'Autorisation",
+      "step2Desc": "Signez les documents requis (utilisez notre formulaire téléchargeable si nécessaire)",
+      "step3Title": "Attendre la Vérification",
+      "step3Desc": "Les dépôts directs commencent généralement dans 1-2 cycles de paie",
+      "step4Title": "Suivre le Paiement",
+      "step4Desc": "Surveillez votre page de transactions pour les dépôts entrants"
+    },
     "needHelp": {
       "title": "Besoin d'Aide?",
       "description": "Contactez notre équipe d'assistance si vous avez des questions sur les dépôts directs."

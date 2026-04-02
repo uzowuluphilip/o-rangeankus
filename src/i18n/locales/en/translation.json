@@ -328,6 +328,17 @@
       "title": "Security",
       "description": "Your account information is encrypted and secure. Only share routing and account numbers with trusted employers."
     },
+    "setup": {
+      "title": "How to Set Up Direct Deposit",
+      "step1Title": "Provide Employer",
+      "step1Desc": "Share the routing number and account number with your employer's payroll department",
+      "step2Title": "Complete Authorization",
+      "step2Desc": "Sign any required documents (use our downloadable form if needed)",
+      "step3Title": "Wait for Verification",
+      "step3Desc": "Direct deposits usually start within 1-2 pay cycles",
+      "step4Title": "Track Payment",
+      "step4Desc": "Monitor your transactions page for incoming deposits"
+    },
     "needHelp": {
       "title": "Need Help?",
       "description": "Contact our support team if you have questions about direct deposits."

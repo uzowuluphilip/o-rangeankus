@@ -196,30 +196,30 @@ const DirectDeposit = () => {
           {/* Instructions Card */}
           <div className="card">
             <div className="card-body p-4">
-              <h5 className="card-title text-primary-text mb-4">How to Set Up Direct Deposit</h5>
+              <h5 className="card-title text-primary-text mb-4">{t('directDeposit.setup.title')}</h5>
               <ol className="text-primary-text">
                 <li className="mb-3">
-                  <strong>Provide Employer</strong>
+                  <strong>{t('directDeposit.setup.step1Title')}</strong>
                   <p className="text-secondary small mb-0">
-                    Share the routing number and account number with your employer's payroll department
+                    {t('directDeposit.setup.step1Desc')}
                   </p>
                 </li>
                 <li className="mb-3">
-                  <strong>Complete Authorization</strong>
+                  <strong>{t('directDeposit.setup.step2Title')}</strong>
                   <p className="text-secondary small mb-0">
-                    Sign any required documents (use our downloadable form if needed)
+                    {t('directDeposit.setup.step2Desc')}
                   </p>
                 </li>
                 <li className="mb-3">
-                  <strong>Wait for Verification</strong>
+                  <strong>{t('directDeposit.setup.step3Title')}</strong>
                   <p className="text-secondary small mb-0">
-                    Direct deposits usually start within 1-2 pay cycles
+                    {t('directDeposit.setup.step3Desc')}
                   </p>
                 </li>
                 <li>
-                  <strong>Track Payment</strong>
+                  <strong>{t('directDeposit.setup.step4Title')}</strong>
                   <p className="text-secondary small mb-0">
-                    Monitor your transactions page for incoming deposits
+                    {t('directDeposit.setup.step4Desc')}
                   </p>
                 </li>
               </ol>
