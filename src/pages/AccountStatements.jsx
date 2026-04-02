@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n from '../i18n/i18n'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { Clipboard, Calendar, Download } from 'lucide-react'
@@ -19,6 +20,15 @@ const AccountStatements = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [downloadingId, setDownloadingId] = useState(null)
+
+  // Map language codes to locale strings for date formatting
+  const localeMap = {
+    en: 'en-US',
+    es: 'es-ES',
+    de: 'de-DE',
+    fr: 'fr-FR'
+  }
+  const currentLocale = localeMap[i18n.language] || 'en-US'
 
   // Fetch account statements
   useEffect(() => {
@@ -107,13 +117,13 @@ const AccountStatements = () => {
                 <div className="card-body d-flex flex-column">
                   {/* Statement period */}
                   <h6 className="card-title text-primary-text fw-bold mb-1">
-                    <Calendar size={16} className="me-1" style={{display: 'inline-block'}} /> {new Date(statement.start_date).toLocaleDateString(t('common.locale') || 'en-US', {
+                    <Calendar size={16} className="me-1" style={{display: 'inline-block'}} /> {new Date(statement.start_date).toLocaleDateString(currentLocale, {
                       year: 'numeric',
                       month: 'long'
                     })}
                   </h6>
                   <p className="text-secondary small mb-3">
-                    {new Date(statement.start_date).toLocaleDateString()} - {new Date(statement.end_date).toLocaleDateString()}
+                    {new Date(statement.start_date).toLocaleDateString(currentLocale)} - {new Date(statement.end_date).toLocaleDateString(currentLocale)}
                   </p>
 
                   {/* Statement details */}
