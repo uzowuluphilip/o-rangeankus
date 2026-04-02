@@ -10,7 +10,8 @@
     "logout": "Déconnexion",
     "dashboard": "Tableau de Bord",
     "profile": "Profil",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "welcome": "Bienvenue"
   },
   "header": {
     "welcome": "Bienvenue à Orange Bank",

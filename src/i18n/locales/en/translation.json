@@ -10,7 +10,8 @@
     "logout": "Logout",
     "dashboard": "Dashboard",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "welcome": "Welcome"
   },
   "header": {
     "welcome": "Welcome to Orange Bank",
@@ -168,7 +169,9 @@
     "filter": "Filter",
     "sort": "Sort",
     "export": "Export",
-    "import": "Import"
+    "import": "Import",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
   },
   "messages": {
     "success": "Operation completed successfully",

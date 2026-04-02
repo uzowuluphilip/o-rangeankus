@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { LogOut, Menu } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
@@ -19,6 +20,7 @@ import BankLogo from './BankLogo'
  */
 const Navbar = () => {
   const { user, logout } = useAuth()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -64,15 +66,15 @@ const Navbar = () => {
             {user && (
               <>
                 <div className="user-greeting">
-                  Welcome, <strong>{user?.first_name || user?.email}</strong>
+                  {t('nav.welcome')}, <strong>{user?.first_name || user?.email}</strong>
                 </div>
                 <button
                   className="btn btn-logout"
                   onClick={handleLogout}
-                  title="Logout"
+                  title={t('nav.logout')}
                 >
                   <LogOut size={18} />
-                  Logout
+                  {t('nav.logout')}
                 </button>
               </>
             )}

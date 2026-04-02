@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Menu, X } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -16,6 +17,7 @@ import './LandingNavbar.css'
  * - Responsive design
  */
 const LandingNavbar = () => {
+  const { t } = useTranslation()
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -33,10 +35,10 @@ const LandingNavbar = () => {
             <ThemeToggle />
             <LanguageSwitcher />
             <Link to="/login" className="btn btn-nav-secondary">
-              Login
+              {t('nav.login')}
             </Link>
             <Link to="/register" className="btn btn-nav-primary">
-              Get Started
+              {t('nav.register')}
             </Link>
           </div>
 
@@ -46,7 +48,7 @@ const LandingNavbar = () => {
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
-            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-label={menuOpen ? t('common.closeMenu') : t('common.openMenu')}
           >
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -54,16 +56,16 @@ const LandingNavbar = () => {
 
         <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
           <Link to="/contact" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
-            Contact Us
+            {t('nav.contact')}
           </Link>
           <Link to="/terms" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
-            Terms of Service
+            {t('landing.termsOfService')}
           </Link>
           <Link to="/login" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
-            Login
+            {t('nav.login')}
           </Link>
           <Link to="/register" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
-            Get Started
+            {t('nav.register')}
           </Link>
         </div>
       </div>
