@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { ArrowDownToLine, Sparkles, Lock, HelpCircle } from 'lucide-react'
@@ -13,6 +14,7 @@ import { ArrowDownToLine, Sparkles, Lock, HelpCircle } from 'lucide-react'
  * - Shareable bank details
  */
 const DirectDeposit = () => {
+  const { t } = useTranslation()
   const [directDepositData, setDirectDepositData] = useState(null)
   const [formData, setFormData] = useState({
     routing_number: '',
@@ -39,7 +41,7 @@ const DirectDeposit = () => {
           bank_name: data.bank_name || 'Orange Bank'
         })
       } catch (err) {
-        const message = err.response?.data?.message || 'Failed to load direct deposit info'
+        const message = err.response?.data?.message || t('directDeposit.failed')
         setError(message)
       } finally {
         setLoading(false)
@@ -73,7 +75,7 @@ const DirectDeposit = () => {
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
     } catch (err) {
-      setError('Failed to download PDF')
+      setError(t('directDeposit.failedDownload'))
     }
   }
 
@@ -82,7 +84,7 @@ const DirectDeposit = () => {
       <DashboardLayout>
         <div className="d-flex justify-content-center align-items-center" style={{ height: '500px' }}>
           <div className="spinner-border text-warning" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{t('common.loading')}</span>
           </div>
         </div>
       </DashboardLayout>
@@ -92,8 +94,8 @@ const DirectDeposit = () => {
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2"><ArrowDownToLine size={28} className="me-2" style={{display: 'inline-block'}} /> Direct Deposit Setup</h1>
-        <p className="text-secondary">Share these details with your employer</p>
+        <h1 className="h3 text-primary-text mb-2"><ArrowDownToLine size={28} className="me-2" style={{display: 'inline-block'}} /> {t('directDeposit.title')}</h1>
+        <p className="text-secondary">{t('directDeposit.subtitle')}</p>
       </div>
 
       {/* Error alert */}
@@ -113,11 +115,11 @@ const DirectDeposit = () => {
           {/* Bank Information Card */}
           <div className="card mb-4">
             <div className="card-body p-4">
-              <h5 className="card-title text-primary-text mb-4">Bank Information</h5>
+              <h5 className="card-title text-primary-text mb-4">{t('directDeposit.bankName')}</h5>
 
               {/* Routing Number */}
               <div className="mb-4">
-                <label className="form-label text-secondary small">Routing Number</label>
+                <label className="form-label text-secondary small">{t('directDeposit.routingNumber')}</label>
                 <div className="input-group">
                   <input
                     type="text"
@@ -131,14 +133,14 @@ const DirectDeposit = () => {
                     type="button"
                     onClick={() => handleCopy(formData.routing_number, 'routing')}
                   >
-                    {copied === 'routing' ? '✓ Copied' : 'Copy'}
+                    {copied === 'routing' ? `✓ ${t('directDeposit.copied')}` : t('directDeposit.copy')}
                   </button>
                 </div>
               </div>
 
               {/* Account Number */}
               <div className="mb-4">
-                <label className="form-label text-secondary small">Account Number</label>
+                <label className="form-label text-secondary small">{t('directDeposit.accountNumber')}</label>
                 <div className="input-group">
                   <input
                     type="text"
@@ -152,14 +154,14 @@ const DirectDeposit = () => {
                     type="button"
                     onClick={() => handleCopy(formData.account_number, 'account')}
                   >
-                    {copied === 'account' ? '✓ Copied' : 'Copy'}
+                    {copied === 'account' ? `✓ ${t('directDeposit.copied')}` : t('directDeposit.copy')}
                   </button>
                 </div>
               </div>
 
               {/* Account Type */}
               <div className="mb-4">
-                <label className="form-label text-secondary small">Account Type</label>
+                <label className="form-label text-secondary small">{t('directDeposit.accountType')}</label>
                 <input
                   type="text"
                   className="form-control"
@@ -171,7 +173,7 @@ const DirectDeposit = () => {
 
               {/* Bank Name */}
               <div className="mb-4">
-                <label className="form-label text-secondary small">Bank Name</label>
+                <label className="form-label text-secondary small">{t('directDeposit.bankName')}</label>
                 <input
                   type="text"
                   className="form-control"
@@ -186,7 +188,7 @@ const DirectDeposit = () => {
                 className="btn btn-primary w-100 py-2"
                 onClick={handleDownloadPDF}
               >
-                📄 Download Direct Deposit Form (PDF)
+                📄 {t('directDeposit.downloadPDF')}
               </button>
             </div>
           </div>

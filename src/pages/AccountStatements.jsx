@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { Clipboard, Calendar, Download } from 'lucide-react'
@@ -13,6 +14,7 @@ import { Clipboard, Calendar, Download } from 'lucide-react'
  * - Opening/closing balances
  */
 const AccountStatements = () => {
+  const { t } = useTranslation()
   const [statements, setStatements] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -26,7 +28,7 @@ const AccountStatements = () => {
         const response = await axiosInstance.get('/account/statements')
         setStatements(response.data.data || response.data || [])
       } catch (err) {
-        const message = err.response?.data?.message || 'Failed to load statements'
+        const message = err.response?.data?.message || t('accountStatements.failedLoad')
         setError(message)
       } finally {
         setLoading(false)
@@ -55,7 +57,7 @@ const AccountStatements = () => {
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
     } catch (err) {
-      setError('Failed to download statement')
+      setError(t('accountStatements.downloadFailed'))
     } finally {
       setDownloadingId(null)
     }
@@ -66,7 +68,7 @@ const AccountStatements = () => {
       <DashboardLayout>
         <div className="d-flex justify-content-center align-items-center" style={{ height: '500px' }}>
           <div className="spinner-border text-warning" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{t('common.loading')}</span>
           </div>
         </div>
       </DashboardLayout>
@@ -76,8 +78,8 @@ const AccountStatements = () => {
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2"><Clipboard size={28} className="me-2" style={{display: 'inline-block'}} /> Account Statements</h1>
-        <p className="text-secondary">Download your monthly account statements</p>
+        <h1 className="h3 text-primary-text mb-2"><Clipboard size={28} className="me-2" style={{display: 'inline-block'}} /> {t('accountStatements.title')}</h1>
+        <p className="text-secondary">{t('accountStatements.subtitle')}</p>
       </div>
 
       {/* Error alert */}
@@ -95,7 +97,7 @@ const AccountStatements = () => {
       {/* Statements List */}
       {statements.length === 0 ? (
         <div className="alert alert-info text-center py-5">
-          No statements available yet
+        {t('accountStatements.noStatements')}
         </div>
       ) : (
         <div className="row">
@@ -105,7 +107,7 @@ const AccountStatements = () => {
                 <div className="card-body d-flex flex-column">
                   {/* Statement period */}
                   <h6 className="card-title text-primary-text fw-bold mb-1">
-                    <Calendar size={16} className="me-1" style={{display: 'inline-block'}} /> {new Date(statement.start_date).toLocaleDateString('en-US', {
+                    <Calendar size={16} className="me-1" style={{display: 'inline-block'}} /> {new Date(statement.start_date).toLocaleDateString(t('common.locale') || 'en-US', {
                       year: 'numeric',
                       month: 'long'
                     })}
@@ -117,21 +119,21 @@ const AccountStatements = () => {
                   {/* Statement details */}
                   <div className="mb-4 flex-grow-1">
                     <div className="mb-3">
-                      <p className="text-secondary small mb-1">Opening Balance</p>
+                    <p className="text-secondary small mb-1">{t('accountStatements.openingBalance')}</p>
                       <p className="text-primary-text fw-bold">
                         ${statement.opening_balance?.toFixed(2) || '0.00'}
                       </p>
                     </div>
 
                     <div className="mb-3">
-                      <p className="text-secondary small mb-1">Closing Balance</p>
+                    <p className="text-secondary small mb-1">{t('accountStatements.closingBalance')}</p>
                       <p className="text-success fw-bold">
                         ${statement.closing_balance?.toFixed(2) || '0.00'}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-secondary small mb-1">Transactions</p>
+                      <p className="text-secondary small mb-1">{t('accountStatements.transactions')}</p>
                       <p className="text-primary-orange fw-bold">
                         {statement.transactions_count || 0}
                       </p>
@@ -147,7 +149,7 @@ const AccountStatements = () => {
                     {downloadingId === statement.statement_id ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Downloading...
+                        {t('accountStatements.downloading')}
                       </>
                     ) : (
                       <><Download size={16} className="me-2" style={{display: 'inline-block'}} />Download PDF</>

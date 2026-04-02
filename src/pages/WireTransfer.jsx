@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { DollarSign, Lightbulb } from 'lucide-react'
@@ -15,6 +16,7 @@ import { DollarSign, Lightbulb } from 'lucide-react'
  * - Success/error notifications
  */
 const WireTransfer = () => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     recipientName: '',
     bank: '',
@@ -41,19 +43,19 @@ const WireTransfer = () => {
   // Validate form inputs
   const validateForm = () => {
     if (!formData.recipientName.trim()) {
-      setError('Recipient name is required')
+      setError(t('wireTransfer.recipientNameRequired'))
       return false
     }
     if (!formData.bank.trim()) {
-      setError('Bank name is required')
+      setError(t('wireTransfer.bankNameRequired'))
       return false
     }
     if (!formData.accountNumber.trim()) {
-      setError('Account number is required')
+      setError(t('wireTransfer.accountNumberRequired'))
       return false
     }
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      setError('Please enter a valid amount')
+      setError(t('wireTransfer.validAmountRequired'))
       return false
     }
     return true
@@ -82,7 +84,7 @@ const WireTransfer = () => {
     if (!validateForm()) return
 
     if (parseFloat(formData.amount) > accountBalance) {
-      setError('Insufficient balance. Please use Direct Deposit or top up your account.')
+      setError(t('wireTransfer.insufficientBalance'))
       return
     }
 
@@ -98,7 +100,7 @@ const WireTransfer = () => {
         purpose: formData.purpose
       })
 
-      setSuccess('Wire transfer initiated successfully!')
+      setSuccess(t('wireTransfer.wireInitiated'))
       
       // Reset form
       setFormData({
@@ -112,7 +114,7 @@ const WireTransfer = () => {
       // Redirect to dashboard after 2 seconds
       setTimeout(() => navigate('/dashboard'), 2000)
     } catch (err) {
-      const message = err.response?.data?.message || 'Wire transfer failed. Please try again.'
+      const message = err.response?.data?.message || t('wireTransfer.wireFailed')
       setError(message)
     } finally {
       setLoading(false)
@@ -122,9 +124,9 @@ const WireTransfer = () => {
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2"><DollarSign size={28} className="me-2" style={{display: 'inline-block'}} /> Wire Transfer</h1>
-        <p className="text-secondary">Send money domestically</p>
-        <p className="text-secondary">Available balance: ${accountBalance.toFixed(2)}</p>
+        <h1 className="h3 text-primary-text mb-2"><DollarSign size={28} className="me-2" style={{display: 'inline-block'}} /> {t('wireTransfer.title')}</h1>
+        <p className="text-secondary">{t('wireTransfer.subtitle')}</p>
+        <p className="text-secondary">{t('wireTransfer.availableBalance', { amount: accountBalance.toFixed(2) })}</p>
       </div>
 
       <div className="row">
@@ -159,7 +161,7 @@ const WireTransfer = () => {
                 {/* Recipient Name */}
                 <div className="mb-4">
                   <label htmlFor="recipientName" className="form-label text-primary-text">
-                    Recipient Name <span className="text-danger">*</span>
+                    {t('wireTransfer.formLabels.recipientName')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -175,7 +177,7 @@ const WireTransfer = () => {
                 {/* Bank Name */}
                 <div className="mb-4">
                   <label htmlFor="bank" className="form-label text-primary-text">
-                    Bank Name <span className="text-danger">*</span>
+                    {t('wireTransfer.formLabels.bank')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -191,7 +193,7 @@ const WireTransfer = () => {
                 {/* Account Number */}
                 <div className="mb-4">
                   <label htmlFor="accountNumber" className="form-label text-primary-text">
-                    Account Number <span className="text-danger">*</span>
+                    {t('wireTransfer.formLabels.accountNumber')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -207,7 +209,7 @@ const WireTransfer = () => {
                 {/* Routing Number */}
                 <div className="mb-4">
                   <label htmlFor="routingNumber" className="form-label text-primary-text">
-                    Routing Number <span className="text-danger">*</span>
+                    {t('wireTransfer.formLabels.routingNumber')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -223,7 +225,7 @@ const WireTransfer = () => {
                 {/* Amount */}
                 <div className="mb-4">
                   <label htmlFor="amount" className="form-label text-primary-text">
-                    Amount (USD) <span className="text-danger">*</span>
+                    {t('wireTransfer.formLabels.amount')} <span className="text-danger">*</span>
                   </label>
                   <div className="input-group">
                     <span className="input-group-text bg-dark border-secondary text-primary-orange">$</span>
@@ -245,7 +247,7 @@ const WireTransfer = () => {
                 {/* Purpose */}
                 <div className="mb-4">
                   <label htmlFor="purpose" className="form-label text-primary-text">
-                    Purpose (Optional)
+                    {t('wireTransfer.formLabels.purpose')} ({t('common.optional')})
                   </label>
                   <textarea
                     className="form-control"
@@ -269,10 +271,10 @@ const WireTransfer = () => {
                     {loading ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Processing...
+                        {t('common.loading')}
                       </>
                     ) : (
-                      'Send Transfer'
+                      t('banking.sendTransfer')
                     )}
                   </button>
                   <button
@@ -281,7 +283,7 @@ const WireTransfer = () => {
                     onClick={() => navigate('/dashboard')}
                     disabled={loading}
                   >
-                    Cancel
+                    {t('common.cancel')}
                   </button>
                 </div>
               </form>

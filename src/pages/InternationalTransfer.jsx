@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { Globe, Lightbulb, Clock } from 'lucide-react'
@@ -15,6 +16,7 @@ import { Globe, Lightbulb, Clock } from 'lucide-react'
  * - POST /transfer/international endpoint
  */
 const InternationalTransfer = () => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     recipientName: '',
     country: '',
@@ -69,23 +71,23 @@ const InternationalTransfer = () => {
   // Validate form inputs
   const validateForm = () => {
     if (!formData.recipientName.trim()) {
-      setError('Recipient name is required')
+      setError(t('internationalTransfer.recipientNameRequired'))
       return false
     }
     if (!formData.country.trim()) {
-      setError('Country is required')
+      setError(t('internationalTransfer.countryRequired'))
       return false
     }
     if (!formData.accountNumber.trim()) {
-      setError('Account number is required')
+      setError(t('internationalTransfer.accountNumberRequired'))
       return false
     }
     if (!formData.swiftCode.trim()) {
-      setError('SWIFT code is required')
+      setError(t('internationalTransfer.swiftCodeRequired'))
       return false
     }
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      setError('Please enter a valid amount')
+      setError(t('internationalTransfer.validAmountRequired'))
       return false
     }
     return true
@@ -112,7 +114,7 @@ const InternationalTransfer = () => {
         purpose: formData.purpose
       })
 
-      setSuccess('International transfer initiated successfully!')
+      setSuccess(t('internationalTransfer.transferInitiated'))
       
       // Reset form
       setFormData({
@@ -128,7 +130,7 @@ const InternationalTransfer = () => {
       // Redirect to dashboard after 2 seconds
       setTimeout(() => navigate('/dashboard'), 2000)
     } catch (err) {
-      const message = err.response?.data?.message || 'Transfer failed. Please try again.'
+      const message = err.response?.data?.message || t('internationalTransfer.transferFailed')
       setError(message)
     } finally {
       setLoading(false)
@@ -138,8 +140,8 @@ const InternationalTransfer = () => {
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2"><Globe size={28} className="me-2" style={{display: 'inline-block'}} /> International Transfer</h1>
-        <p className="text-secondary">Send money internationally with real-time exchange rates</p>
+        <h1 className="h3 text-primary-text mb-2"><Globe size={28} className="me-2" style={{display: 'inline-block'}} /> {t('internationalTransfer.title')}</h1>
+        <p className="text-secondary">{t('internationalTransfer.subtitle')}</p>
       </div>
 
       <div className="row">
@@ -174,7 +176,7 @@ const InternationalTransfer = () => {
                 {/* Recipient Name */}
                 <div className="mb-4">
                   <label htmlFor="recipientName" className="form-label text-primary-text">
-                    Recipient Name <span className="text-danger">*</span>
+                    {t('internationalTransfer.formLabels.recipientName')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -191,7 +193,7 @@ const InternationalTransfer = () => {
                 {/* Country */}
                 <div className="mb-4">
                   <label htmlFor="country" className="form-label text-primary-text">
-                    Country <span className="text-danger">*</span>
+                    {t('internationalTransfer.formLabels.country')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -208,7 +210,7 @@ const InternationalTransfer = () => {
                 {/* Account Number */}
                 <div className="mb-4">
                   <label htmlFor="accountNumber" className="form-label text-primary-text">
-                    IBAN / Account Number <span className="text-danger">*</span>
+                    {t('internationalTransfer.formLabels.accountNumber')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -225,7 +227,7 @@ const InternationalTransfer = () => {
                 {/* SWIFT Code */}
                 <div className="mb-4">
                   <label htmlFor="swiftCode" className="form-label text-primary-text">
-                    SWIFT Code <span className="text-danger">*</span>
+                    {t('internationalTransfer.formLabels.swiftCode')} <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -243,7 +245,7 @@ const InternationalTransfer = () => {
                 <div className="row">
                   <div className="col-md-6 mb-4">
                     <label htmlFor="currency" className="form-label text-primary-text">
-                      Currency <span className="text-danger">*</span>
+                      {t('internationalTransfer.formLabels.currency')} <span className="text-danger">*</span>
                     </label>
                     <select
                       className="form-select"
@@ -263,7 +265,7 @@ const InternationalTransfer = () => {
 
                   <div className="col-md-6 mb-4">
                     <label htmlFor="amount" className="form-label text-primary-text">
-                      Amount (USD) <span className="text-danger">*</span>
+                      {t('internationalTransfer.formLabels.amount')} <span className="text-danger">*</span>
                     </label>
                     <div className="input-group">
                       <span className="input-group-text bg-dark border-secondary text-primary-orange">$</span>
@@ -289,11 +291,11 @@ const InternationalTransfer = () => {
                     <div className="card-body">
                       <div className="row">
                         <div className="col-md-6">
-                          <p className="text-secondary small mb-1">You Send</p>
+                          <p className="text-secondary small mb-1">{t('internationalTransfer.exchangeRate')}</p>
                           <h5 className="text-primary-orange fw-bold">${formData.amount}</h5>
                         </div>
                         <div className="col-md-6">
-                          <p className="text-secondary small mb-1">Recipient Receives</p>
+                          <p className="text-secondary small mb-1">{t('internationalTransfer.convertedAmount')}</p>
                           <h5 className="text-success fw-bold">
                             {convertedAmount} {formData.currency}
                           </h5>
@@ -310,7 +312,7 @@ const InternationalTransfer = () => {
                 {/* Purpose */}
                 <div className="mb-4">
                   <label htmlFor="purpose" className="form-label text-primary-text">
-                    Purpose (Optional)
+                    {t('internationalTransfer.formLabels.purpose')} ({t('common.optional')})
                   </label>
                   <textarea
                     className="form-control"
@@ -334,10 +336,10 @@ const InternationalTransfer = () => {
                     {loading ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Processing...
+                        {t('common.loading')}
                       </>
                     ) : (
-                      'Send Transfer'
+                      t('banking.sendTransfer')
                     )}
                   </button>
                   <button
@@ -346,7 +348,7 @@ const InternationalTransfer = () => {
                     onClick={() => navigate('/dashboard')}
                     disabled={loading}
                   >
-                    Cancel
+                    {t('common.cancel')}
                   </button>
                 </div>
               </form>

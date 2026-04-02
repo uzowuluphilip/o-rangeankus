@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import TransactionTable from '../components/TransactionTable'
 import axiosInstance from '../api/axios'
@@ -18,6 +19,7 @@ import { useAuth } from '../context/AuthContext'
  *   - PATCH /admin/freeze/:id
  */
 const AdminDashboard = () => {
+  const { t } = useTranslation()
   const [stats, setStats] = useState(null)
   const [users, setUsers] = useState([])
   const [transactions, setTransactions] = useState([])
@@ -38,7 +40,7 @@ const AdminDashboard = () => {
         
         if (user?.role !== 'admin') {
           console.error('[AdminDashboard] User is not an admin!')
-          setError('You do not have admin access')
+          setError(t('admin.noAccess'))
           setLoading(false)
           return
         }
@@ -70,11 +72,11 @@ const AdminDashboard = () => {
         console.error('[AdminDashboard] Error status:', err.response?.status)
         
         if (err.response?.status === 401) {
-          setError('Authentication expired. Please login again.')
+          setError(t('admin.authExpired'))
         } else if (err.response?.status === 403) {
-          setError('You do not have permission to access this page')
+          setError(t('admin.permissionDenied'))
         } else {
-          const message = err.response?.data?.message || err.message || 'Failed to load admin data'
+          const message = err.response?.data?.message || err.message || t('admin.failedLoad')
           setError(message)
         }
       } finally {
@@ -87,7 +89,7 @@ const AdminDashboard = () => {
 
   // Handle freeze account
   const handleFreezeAccount = async (userId) => {
-    if (!window.confirm('Are you sure you want to freeze this account?')) {
+    if (!window.confirm(t('admin.freezeConfirm'))) {
       return
     }
 
@@ -104,7 +106,7 @@ const AdminDashboard = () => {
       ))
       setError('')
     } catch (err) {
-      const message = err.response?.data?.message || 'Failed to update account status'
+      const message = err.response?.data?.message || t('admin.freezeFailed')
       setError(message)
     } finally {
       setFreezingUserId(null)
@@ -126,17 +128,17 @@ const AdminDashboard = () => {
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2">👨‍💼 Admin Dashboard</h1>
-        <p className="text-secondary">Manage users, transactions, and system operations</p>
+        <h1 className="h3 text-primary-text mb-2">👨‍💼 {t('admin.dashboard')}</h1>
+        <p className="text-secondary">{t('admin.manageOperations')}</p>
       </div>
 
       <div className="mb-4">
         <div className="d-flex flex-wrap gap-2 mb-3">
-          <a href="/admin/users" className="btn btn-outline-secondary">Users</a>
-          <a href="/admin/balance" className="btn btn-outline-secondary">Balance Management</a>
-          <a href="/admin/pending-transfers" className="btn btn-outline-secondary">Pending Transfers</a>
-          <a href="/admin/transaction-dates" className="btn btn-outline-secondary">Transaction Dates</a>
-          <a href="/admin/receipts" className="btn btn-outline-secondary">Receipts</a>
+          <a href="/admin/users" className="btn btn-outline-secondary">{t('admin.users')}</a>
+          <a href="/admin/balance" className="btn btn-outline-secondary">{t('admin.balanceManagement')}</a>
+          <a href="/admin/pending-transfers" className="btn btn-outline-secondary">{t('admin.pendingTransfers')}</a>
+          <a href="/admin/transaction-dates" className="btn btn-outline-secondary">{t('admin.transactionDates')}</a>
+          <a href="/admin/receipts" className="btn btn-outline-secondary">{t('admin.receipts')}</a>
         </div>
       </div>
 

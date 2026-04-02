@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { Mail, Lock, LogIn, Loader, ShieldAlert } from 'lucide-react'
 import axiosInstance from '../api/axios'
@@ -16,6 +17,7 @@ import './Auth.css'
  * - Stunning modern design with light/dark mode
  */
 const AdminLogin = () => {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')

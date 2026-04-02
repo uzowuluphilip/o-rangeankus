@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import TransactionTable from '../components/TransactionTable'
 import axiosInstance from '../api/axios'
@@ -14,6 +15,7 @@ import { FileText } from 'lucide-react'
  * - Fetches from GET /transactions?filters
  */
 const TransactionHistory = () => {
+  const { t } = useTranslation()
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -45,7 +47,7 @@ const TransactionHistory = () => {
         setTransactions(Array.isArray(data) ? data : (data.transactions || []))
         setTotalPages(data.total_pages || 1)
       } catch (err) {
-        const message = err.response?.data?.message || 'Failed to load transactions'
+        const message = err.response?.data?.message || t('transactionHistory.failedLoad')
         setError(message)
       } finally {
         setLoading(false)
@@ -73,19 +75,19 @@ const TransactionHistory = () => {
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2"><FileText size={28} className="me-2" style={{display: 'inline-block'}} /> Transaction History</h1>
-        <p className="text-secondary">View and filter your transactions</p>
+        <h1 className="h3 text-primary-text mb-2"><FileText size={28} className="me-2" style={{display: 'inline-block'}} /> {t('transactionHistory.title')}</h1>
+        <p className="text-secondary">{t('transactionHistory.subtitle')}</p>
       </div>
 
       {/* Filters Card */}
       <div className="card mb-4">
         <div className="card-body p-4">
-          <h6 className="card-title text-primary-text mb-4">Filters</h6>
+          <h6 className="card-title text-primary-text mb-4">{t('transactionHistory.filters')}</h6>
           <div className="row">
             {/* Transaction Type Filter */}
             <div className="col-12 col-md-4 mb-3">
               <label htmlFor="typeFilter" className="form-label text-secondary small">
-                Transaction Type
+                {t('transactionHistory.filterByType')}
               </label>
               <select
                 className="form-select"
@@ -94,10 +96,10 @@ const TransactionHistory = () => {
                 value={filters.type}
                 onChange={handleFilterChange}
               >
-                <option value="">All Types</option>
-                <option value="deposit">Deposit</option>
-                <option value="withdrawal">Withdrawal</option>
-                <option value="transfer">Transfer</option>
+                <option value="">{t('transactionHistory.allTypes')}</option>
+                <option value="deposit">{t('transactions.deposit')}</option>
+                <option value="withdrawal">{t('transactions.withdrawal')}</option>
+                <option value="transfer">{t('transactions.type')}</option>
                 <option value="payment">Payment</option>
               </select>
             </div>
@@ -105,7 +107,7 @@ const TransactionHistory = () => {
             {/* Start Date Filter */}
             <div className="col-12 col-md-4 mb-3">
               <label htmlFor="startDateFilter" className="form-label text-secondary small">
-                Start Date
+                {t('transactionHistory.startDate')}
               </label>
               <input
                 type="date"
@@ -120,7 +122,7 @@ const TransactionHistory = () => {
             {/* End Date Filter */}
             <div className="col-12 col-md-4 mb-3">
               <label htmlFor="endDateFilter" className="form-label text-secondary small">
-                End Date
+                {t('transactionHistory.endDate')}
               </label>
               <input
                 type="date"
@@ -140,7 +142,7 @@ const TransactionHistory = () => {
                 className="btn btn-sm btn-outline-secondary"
                 onClick={() => setFilters({ type: '', startDate: '', endDate: '' })}
               >
-                Clear Filters
+                {t('transactionHistory.clearFilters')}
               </button>
             </div>
           )}
