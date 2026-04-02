@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import TransactionTable from '../components/TransactionTable'
 import axiosInstance from '../api/axios'
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { t } = useTranslation()
 
   // Fetch dashboard data
   useEffect(() => {
@@ -58,7 +60,7 @@ const Dashboard = () => {
         const transactionsResponse = await axiosInstance.get('/transactions/recent')
         setRecentTransactions(transactionsResponse.data.data || transactionsResponse.data || [])
       } catch (err) {
-        const message = err.response?.data?.message || 'Failed to load dashboard data'
+        const message = err.response?.data?.message || t('messages.failedLoadDashboard')
         setError(message)
       } finally {
         setLoading(false)
@@ -84,8 +86,8 @@ const Dashboard = () => {
         {/* Page header */}
         <div className="dashboard-header">
           <div>
-            <h1 className="dashboard-title">Welcome back, {user?.first_name || 'User'}!</h1>
-            <p className="dashboard-subtitle">Manage your accounts and finances</p>
+            <h1 className="dashboard-title">{t('dashboard.welcome', { name: user?.first_name || t('common.user') })}</h1>
+            <p className="dashboard-subtitle">{t('dashboard.manageFinances')}</p>
           </div>
         </div>
 
@@ -107,7 +109,7 @@ const Dashboard = () => {
           {/* Account balance card */}
           <div className="card-modern">
             <div className="card-header">
-              <h6 className="card-title">Account Balance</h6>
+              <h6 className="card-title">{t('dashboard.accountBalance')}</h6>
               <div className="card-icon">
                 <Wallet size={28} />
               </div>
@@ -119,14 +121,14 @@ const Dashboard = () => {
               className="btn btn-primary w-100"
               onClick={() => navigate('/statements')}
             >
-              View Statements
+              {t('dashboard.viewStatements')}
             </button>
           </div>
 
           {/* Account info card */}
           <div className="card-modern">
             <div className="card-header">
-              <h6 className="card-title">Account Number</h6>
+              <h6 className="card-title">{t('dashboard.accountNumber')}</h6>
               <div className="card-icon">
                 <CreditCard size={28} />
               </div>
@@ -136,24 +138,24 @@ const Dashboard = () => {
               className="btn btn-secondary w-100"
               onClick={() => navigate('/direct-deposit')}
             >
-              Setup Direct Deposit
+              {t('dashboard.setupDirectDeposit')}
             </button>
           </div>
 
           {/* Account status card */}
           <div className="card-modern">
             <div className="card-header">
-              <h6 className="card-title">Account Status</h6>
+              <h6 className="card-title">{t('dashboard.accountStatus')}</h6>
               <div className="card-icon">
                 <CreditCard size={28} />
               </div>
             </div>
             <div style={{ marginBottom: '1rem' }}>
-              <span className="badge bg-success me-2">✓ Active</span>
-              <span className="badge bg-info">Verified</span>
+              <span className="badge bg-success me-2">✓ {t('dashboard.active')}</span>
+              <span className="badge bg-info">{t('dashboard.verified')}</span>
             </div>
             <p className="text-tertiary small mb-0">
-              Your account is fully verified and active
+              {t('dashboard.accountVerified')}
             </p>
           </div>
         </div>
@@ -162,40 +164,40 @@ const Dashboard = () => {
         <div className="dashboard-section">
           <h5 className="section-title">
             <TrendingUp size={24} />
-            Quick Actions
+            {t('dashboard.quickActions')}
           </h5>
           <div className="btn-action-group">
             <button
               className="btn-action"
               onClick={() => navigate('/wire-transfer')}
-              title="Send money domestically"
+              title={t('banking.sendDomestically')}
             >
               <Send size={24} />
-              Wire Transfer
+              {t('banking.wireTransfer')}
             </button>
             <button
               className="btn-action"
               onClick={() => navigate('/international-transfer')}
-              title="Send money internationally"
+              title={t('banking.sendInternationally')}
             >
               <Globe size={24} />
-              International
+              {t('banking.international')}
             </button>
             <button
               className="btn-action"
               onClick={() => navigate('/direct-deposit')}
-              title="Receive direct deposits"
+              title={t('banking.receiveDirectDeposits')}
             >
               <ArrowDownToLine size={24} />
-              Direct Deposit
+              {t('banking.directDeposit')}
             </button>
             <button
               className="btn-action"
               onClick={() => navigate('/transactions')}
-              title="View transaction history"
+              title={t('transactions.viewHistory')}
             >
               <TrendingUp size={24} />
-              History
+              {t('transactions.history')}
             </button>
           </div>
         </div>
@@ -205,13 +207,13 @@ const Dashboard = () => {
           <div className="section-header">
             <h5 className="section-title">
               <TrendingUp size={24} />
-              Recent Transactions
+              {t('dashboard.recentTransactions')}
             </h5>
             <button
               className="view-all-link"
               onClick={() => navigate('/transactions')}
             >
-              View All →
+              {t('dashboard.viewAll')}
             </button>
           </div>
           {recentTransactions.length > 0 ? (
@@ -222,9 +224,9 @@ const Dashboard = () => {
           ) : (
             <div className="empty-state">
               <div className="empty-state-icon"><Inbox size={48} /></div>
-              <h4 className="empty-state-title">No Transactions Yet</h4>
+              <h4 className="empty-state-title">{t('dashboard.noTransactions')}</h4>
               <p className="empty-state-text">
-                Your transaction history will appear here once you've made transfers
+                {t('dashboard.noTransactionsDescription')}
               </p>
             </div>
           )}

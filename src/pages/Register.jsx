@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from 'react-i18next'
 import { Mail, Lock, User, UserPlus, Loader, Globe, DollarSign, Home } from 'lucide-react'
 import axiosInstance from '../api/axios'
 import './Auth.css'
@@ -29,6 +30,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
   const { login } = useAuth()
+  const { t } = useTranslation()
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -42,31 +44,31 @@ const Register = () => {
   // Validate form inputs
   const validateForm = () => {
     if (!formData.firstName.trim()) {
-      setError('First name is required')
+      setError(t('auth.firstNameRequired'))
       return false
     }
     if (!formData.lastName.trim()) {
-      setError('Last name is required')
+      setError(t('auth.lastNameRequired'))
       return false
     }
     if (!formData.email.trim()) {
-      setError('Email is required')
+      setError(t('auth.emailRequired'))
       return false
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setError('Please enter a valid email address')
+      setError(t('auth.invalidEmail'))
       return false
     }
     if (!formData.password) {
-      setError('Password is required')
+      setError(t('auth.passwordRequired'))
       return false
     }
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long')
+      setError(t('auth.passwordMinLength'))
       return false
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
+      setError(t('auth.passwordMismatch'))
       return false
     }
     return true
@@ -101,7 +103,7 @@ const Register = () => {
 
       if (!user || !token) {
         console.error('[Register] Missing user or token in response:', response.data)
-        setError('Invalid response from server')
+        setError(t('messages.invalidResponse'))
         setLoading(false)
         return
       }
@@ -124,7 +126,7 @@ const Register = () => {
       const message = err.response?.data?.message 
         || err.response?.data?.error 
         || err.message 
-        || 'Registration failed. Please try again.'
+        || t('auth.registerFailed')
       
       console.error('[Register] Final error message:', message)
       setError(message)
@@ -140,12 +142,12 @@ const Register = () => {
         <div className="auth-brand">
           <div className="brand-content">
             <div className="brand-logo">💳</div>
-            <h1>O-rangeankus</h1>
-            <p>Your Financial Gateway</p>
+            <h1>{t('auth.brandName')}</h1>
+            <p>{t('auth.tagline')}</p>
             <div className="brand-features">
-              <div className="feature"><DollarSign size={18} className="me-2" style={{ display: 'inline-block' }} /> Instant Transfers</div>
-              <div className="feature"><Globe size={18} className="me-2" style={{display: 'inline-block'}} /> Global Banking</div>
-              <div className="feature"><Lock size={18} className="me-2" style={{display: 'inline-block'}} /> Secure & Trusted</div>
+              <div className="feature"><DollarSign size={18} className="me-2" style={{ display: 'inline-block' }} /> {t('auth.instantTransfers')}</div>
+              <div className="feature"><Globe size={18} className="me-2" style={{display: 'inline-block'}} /> {t('auth.globalBanking')}</div>
+              <div className="feature"><Lock size={18} className="me-2" style={{display: 'inline-block'}} /> {t('auth.secureTrusted')}</div>
             </div>
           </div>
         </div>
@@ -160,11 +162,11 @@ const Register = () => {
               style={{ textDecoration: 'none', fontSize: '14px' }}
             >
               <Home size={16} className="me-1" style={{display: 'inline-block'}} />
-              Back to Home
+              {t('auth.backToHome')}
             </button>
             <div className="form-header">
-              <h2>Create Account</h2>
-              <p>Join O-rangeankus today</p>
+              <h2>{t('auth.createAccount')}</h2>
+              <p>{t('auth.joinOrangeBankus')}</p>
             </div>
 
             {/* Error message */}
@@ -184,14 +186,14 @@ const Register = () => {
             <form onSubmit={handleSubmit} className="auth-form">
               {/* First Name input */}
               <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="firstName">{t('auth.firstName')}</label>
                 <div className="input-wrapper">
                   <User size={20} className="input-icon" />
                   <input
                     type="text"
                     id="firstName"
                     name="firstName"
-                    placeholder="John"
+                    placeholder={t('auth.firstNamePlaceholder')}
                     value={formData.firstName}
                     onChange={handleChange}
                     disabled={loading}
@@ -202,14 +204,14 @@ const Register = () => {
 
               {/* Last Name input */}
               <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="lastName">{t('auth.lastName')}</label>
                 <div className="input-wrapper">
                   <User size={20} className="input-icon" />
                   <input
                     type="text"
                     id="lastName"
                     name="lastName"
-                    placeholder="Doe"
+                    placeholder={t('auth.lastNamePlaceholder')}
                     value={formData.lastName}
                     onChange={handleChange}
                     disabled={loading}
@@ -220,14 +222,14 @@ const Register = () => {
 
               {/* Email input */}
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="email">{t('auth.email')}</label>
                 <div className="input-wrapper">
                   <Mail size={20} className="input-icon" />
                   <input
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="you@example.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={formData.email}
                     onChange={handleChange}
                     disabled={loading}
@@ -238,14 +240,14 @@ const Register = () => {
 
               {/* Password input */}
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">{t('auth.password')}</label>
                 <div className="input-wrapper">
                   <Lock size={20} className="input-icon" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="password"
                     name="password"
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={formData.password}
                     onChange={handleChange}
                     disabled={loading}
@@ -259,19 +261,19 @@ const Register = () => {
                     {showPassword ? '🙈' : '👁️'}
                   </button>
                 </div>
-                <small className="password-hint">At least 6 characters</small>
+                <small className="password-hint">{t('auth.passwordHint')}</small>
               </div>
 
               {/* Confirm password input */}
               <div className="form-group">
-                <label htmlFor="confirmPassword">Confirm Password</label>
+                <label htmlFor="confirmPassword">{t('auth.confirmPassword')}</label>
                 <div className="input-wrapper">
                   <Lock size={20} className="input-icon" />
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     id="confirmPassword"
                     name="confirmPassword"
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     disabled={loading}
@@ -296,12 +298,12 @@ const Register = () => {
                 {loading ? (
                   <>
                     <Loader size={20} className="spinner" />
-                    Creating Account...
+                    {t('auth.creatingAccount')}
                   </>
                 ) : (
                   <>
                     <UserPlus size={20} />
-                    Create Account
+                    {t('auth.createAccount')}
                   </>
                 )}
               </button>
@@ -309,9 +311,9 @@ const Register = () => {
 
             {/* Login link */}
             <p className="auth-footer">
-              Already have an account?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <Link to="/login" className="link-primary">
-                Sign in here
+                {t('auth.signInHere')}
               </Link>
             </p>
           </div>

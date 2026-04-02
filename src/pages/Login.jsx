@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import { useTranslation } from 'react-i18next'
 import { Mail, Lock, LogIn, Loader, Globe, DollarSign, Home } from 'lucide-react'
 import axiosInstance from '../api/axios'
 import './Auth.css'
@@ -26,19 +27,20 @@ const Login = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
   const { isDarkMode } = useTheme()
+  const { t } = useTranslation()
 
   // Validate form inputs
   const validateForm = () => {
     if (!email.trim()) {
-      setError('Email is required')
+      setError(t('auth.emailRequired'))
       return false
     }
     if (!password.trim()) {
-      setError('Password is required')
+      setError(t('auth.passwordRequired'))
       return false
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email address')
+      setError(t('auth.invalidEmail'))
       return false
     }
     return true
@@ -65,7 +67,7 @@ const Login = () => {
       const { user, token } = response.data.data || response.data
 
       if (!user || !token) {
-        setError('Invalid response from server')
+        setError(t('messages.invalidResponse'))
         setLoading(false)
         return
       }
@@ -78,7 +80,7 @@ const Login = () => {
       navigate('/dashboard')
     } catch (err) {
       console.error('[Login] Error:', err)
-      const message = err.response?.data?.message || err.message || 'Login failed. Please check your credentials and try again.'
+      const message = err.response?.data?.message || err.message || t('auth.loginFailed')
       console.error('[Login] Error message:', message)
       setError(message)
     } finally {
@@ -93,12 +95,12 @@ const Login = () => {
         <div className="auth-brand">
           <div className="brand-content">
             <div className="brand-logo">💳</div>
-            <h1>O-rangeankus</h1>
-            <p>Your Financial Gateway</p>
+            <h1>{t('auth.brandName')}</h1>
+            <p>{t('auth.tagline')}</p>
             <div className="brand-features">
-              <div className="feature"><DollarSign size={18} className="me-2" style={{ display: 'inline-block' }} /> Instant Transfers</div>
-              <div className="feature"><Globe size={18} className="me-2" style={{display: 'inline-block'}} /> Global Banking</div>
-              <div className="feature"><Lock size={18} className="me-2" style={{display: 'inline-block'}} /> Secure & Trusted</div>
+              <div className="feature"><DollarSign size={18} className="me-2" style={{ display: 'inline-block' }} /> {t('auth.instantTransfers')}</div>
+              <div className="feature"><Globe size={18} className="me-2" style={{display: 'inline-block'}} /> {t('auth.globalBanking')}</div>
+              <div className="feature"><Lock size={18} className="me-2" style={{display: 'inline-block'}} /> {t('auth.secureTrusted')}</div>
             </div>
           </div>
         </div>
@@ -113,11 +115,11 @@ const Login = () => {
               style={{ textDecoration: 'none', fontSize: '14px' }}
             >
               <Home size={16} className="me-1" style={{display: 'inline-block'}} />
-              Back to Home
+              {t('auth.backToHome')}
             </button>
             <div className="form-header">
-              <h2>Welcome Back</h2>
-              <p>Sign in to your account</p>
+              <h2>{t('auth.welcomeBack')}</h2>
+              <p>{t('auth.signInDescription')}</p>
             </div>
 
             {/* Error message */}
@@ -137,13 +139,13 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="auth-form">
               {/* Email input */}
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="email">{t('auth.email')}</label>
                 <div className="input-wrapper">
                   <Mail size={20} className="input-icon" />
                   <input
                     type="email"
                     id="email"
-                    placeholder="you@example.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}
@@ -154,13 +156,13 @@ const Login = () => {
 
               {/* Password input */}
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">{t('auth.password')}</label>
                 <div className="input-wrapper">
                   <Lock size={20} className="input-icon" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="password"
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={loading}
@@ -185,12 +187,12 @@ const Login = () => {
                 {loading ? (
                   <>
                     <Loader size={20} className="spinner" />
-                    Signing in...
+                    {t('auth.signingIn')}
                   </>
                 ) : (
                   <>
                     <LogIn size={20} />
-                    Sign In
+                    {t('auth.signIn')}
                   </>
                 )}
               </button>
@@ -198,7 +200,7 @@ const Login = () => {
 
             {/* Divider */}
             <div className="divider">
-              <span>or</span>
+              <span>{t('auth.or')}</span>
             </div>
 
             {/* Admin login link */}
@@ -208,9 +210,9 @@ const Login = () => {
 
             {/* Register link */}
             <p className="auth-footer">
-              Don't have an account?{' '}
+              {t('auth.noAccount')}{' '}
               <Link to="/register" className="link-primary">
-                Create one now
+                {t('auth.createNow')}
               </Link>
             </p>
           </div>
