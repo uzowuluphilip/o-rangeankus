@@ -42,7 +42,17 @@ const Dashboard = () => {
         
         // Fetch account data
         const accountResponse = await axiosInstance.get('/account')
-        setAccountData(accountResponse.data.data || accountResponse.data)
+        const accountData = accountResponse.data.data || accountResponse.data
+        
+        // Fetch balance separately (same way as WireTransfer)
+        const balanceResponse = await axiosInstance.get('/transactions/balance')
+        const balanceData = balanceResponse.data.data || balanceResponse.data
+        
+        // Merge account data with balance
+        setAccountData({
+          ...accountData,
+          balance: balanceData.total_balance || balanceData.balance || 0
+        })
 
         // Fetch recent transactions
         const transactionsResponse = await axiosInstance.get('/transactions/recent')
