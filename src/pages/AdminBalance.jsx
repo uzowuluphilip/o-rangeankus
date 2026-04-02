@@ -25,7 +25,7 @@ const AdminBalance = () => {
   const loadUsers = async () => {
     try {
       setSearching(true)
-      const response = await axiosInstance.get('/api/admin/users')
+      const response = await axiosInstance.get('/admin/users')
       setUsers(response.data.data || [])
       setError('')
     } catch (err) {
@@ -75,7 +75,7 @@ const AdminBalance = () => {
 
     setLoading(true)
     try {
-      const response = await axiosInstance.post('/api/admin/update-balance', {
+      const response = await axiosInstance.post('/admin/update-balance', {
         email: selectedUser.email,
         balance: balanceAmount
       })
