@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Zap, Globe, Shield, Clock, TrendingUp, Lock } from 'lucide-react'
 import LandingNavbar from '../components/LandingNavbar'
 import ScrollToTopButton from '../components/ScrollToTopButton'
@@ -17,6 +18,7 @@ import './Landing.css'
  * - Footer
  */
 const Landing = () => {
+  const { t } = useTranslation()
   return (
     <div className="landing-page">
       <LandingNavbar />
@@ -25,17 +27,16 @@ const Landing = () => {
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
-            <h1 className="hero-title">Modern Banking at Your Fingertips</h1>
+            <h1 className="hero-title">{t('landing.heroTitle')}</h1>
             <p className="hero-subtitle">
-              Fast, secure, and simple. Experience the future of banking with O-rangeankus.
-              Manage your money, transfer funds globally, and grow your wealth all in one place.
+              {t('landing.heroSubtitle')}
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn btn-primary-large">
-                Open Account Today
+                {t('landing.openAccount')}
               </Link>
               <Link to="/login" className="btn btn-secondary-large">
-                Already a Customer?
+                {t('landing.alreadyCustomer')}
               </Link>
             </div>
           </div>
@@ -77,8 +78,8 @@ const Landing = () => {
       {/* Features Section */}
       <section id="features-section" className="features-section">
         <div className="section-header">
-          <h2>Powerful Features for Modern Banking</h2>
-          <p>Everything you need to manage your finances seamlessly</p>
+          <h2>{t('landing.powerfulFeatures')}</h2>
+          <p>{t('landing.manageFinances')}</p>
         </div>
 
         <div className="features-grid">
@@ -87,10 +88,9 @@ const Landing = () => {
             <div className="feature-icon primary">
               <Zap size={32} />
             </div>
-            <h3>Wire Transfers</h3>
+            <h3>{t('banking.wireTransfer')}</h3>
             <p>
-              Fast domestic and international wire transfers with competitive rates and real-time tracking.
-              Send money to anyone, anywhere, anytime.
+              {t('landing.wireTransfersDesc')}
             </p>
           </div>
 
@@ -99,10 +99,9 @@ const Landing = () => {
             <div className="feature-icon success">
               <Globe size={32} />
             </div>
-            <h3>International Transfers</h3>
+            <h3>{t('banking.internationalTransfer')}</h3>
             <p>
-              Send money globally with multi-currency support. Transparent fees and real exchange rates
-              make international banking simple.
+              {t('landing.internationalDesc')}
             </p>
           </div>
 
@@ -111,10 +110,9 @@ const Landing = () => {
             <div className="feature-icon info">
               <TrendingUp size={32} />
             </div>
-            <h3>Direct Deposit</h3>
+            <h3>{t('banking.directDeposit')}</h3>
             <p>
-              Set up direct deposit for your salary and get your paycheck faster. Automatic, reliable,
-              and completely secure.
+              {t('landing.directDepositDesc')}
             </p>
           </div>
 
@@ -123,10 +121,9 @@ const Landing = () => {
             <div className="feature-icon warning">
               <Clock size={32} />
             </div>
-            <h3>24/7 Access</h3>
+            <h3>{t('landing.access24_7')}</h3>
             <p>
-              Bank whenever you want. Our platform is available around the clock for your convenience.
-              No downtime, no limits.
+              {t('landing.access24_7Desc')}
             </p>
           </div>
 
@@ -135,10 +132,9 @@ const Landing = () => {
             <div className="feature-icon success">
               <Lock size={32} />
             </div>
-            <h3>Bank-Grade Security</h3>
+            <h3>{t('landing.bankGradeSecurity')}</h3>
             <p>
-              Your data is protected with military-grade encryption. We comply with all major banking
-              regulations and security standards.
+              {t('landing.securityDesc')}
             </p>
           </div>
 
@@ -147,10 +143,9 @@ const Landing = () => {
             <div className="feature-icon primary">
               <Shield size={32} />
             </div>
-            <h3>Account Protection</h3>
+            <h3>{t('landing.accountProtection')}</h3>
             <p>
-              Your deposits are insured up to the maximum allowed. Peace of mind knowing your money
-              is protected by us.
+              {t('landing.protectionDesc')}
             </p>
           </div>
         </div>
@@ -159,31 +154,31 @@ const Landing = () => {
       {/* How It Works Section */}
       <section className="how-it-works-section">
         <div className="section-header">
-          <h2>How It Works</h2>
-          <p>Get started in just 3 simple steps</p>
+          <h2>{t('landing.howItWorks')}</h2>
+          <p>{t('landing.simpleSteps')}</p>
         </div>
 
         <div className="steps-container">
           <div className="step-card">
             <div className="step-number">1</div>
-            <h3>Create Account</h3>
-            <p>Sign up in minutes with just your email and phone number. Quick verification process.</p>
+            <h3>{t('landing.createAccount')}</h3>
+            <p>{t('landing.createAccountDesc')}</p>
           </div>
 
           <div className="step-divider">→</div>
 
           <div className="step-card">
             <div className="step-number">2</div>
-            <h3>Verify Identity</h3>
-            <p>Complete secure identity verification. Your information stays protected with us.</p>
+            <h3>{t('landing.verifyIdentity')}</h3>
+            <p>{t('landing.verifyDesc')}</p>
           </div>
 
           <div className="step-divider">→</div>
 
           <div className="step-card">
             <div className="step-number">3</div>
-            <h3>Start Banking</h3>
-            <p>Start transferring money, setting up deposits, and managing your finances instantly.</p>
+            <h3>{t('landing.startBanking')}</h3>
+            <p>{t('landing.startBankingDesc')}</p>
           </div>
         </div>
       </section>
@@ -192,42 +187,41 @@ const Landing = () => {
       <section className="trust-section">
         <div className="trust-content">
           <div className="trust-text">
-            <h2>Banking You Can Trust</h2>
+            <h2>{t('landing.bankTrust')}</h2>
             <p>
-              We take security seriously. O-rangeankus is committed to protecting your financial
-              information with industry-leading security standards.
+              {t('landing.trustDescription')}
             </p>
 
             <div className="trust-points">
               <div className="trust-point">
                 <div className="check-icon">✓</div>
                 <div>
-                  <h4>256-Bit Encryption</h4>
-                  <p>Bank-grade security protects all your data</p>
+                  <h4>{t('landing.encryption')}</h4>
+                  <p>{t('landing.encryptionDesc')}</p>
                 </div>
               </div>
 
               <div className="trust-point">
                 <div className="check-icon">✓</div>
                 <div>
-                  <h4>FDIC Protected</h4>
-                  <p>Your deposits are insured and protected</p>
+                  <h4>{t('landing.fdicProtected')}</h4>
+                  <p>{t('landing.fdicDesc')}</p>
                 </div>
               </div>
 
               <div className="trust-point">
                 <div className="check-icon">✓</div>
                 <div>
-                  <h4>24/7 Support</h4>
-                  <p>Our team is always here to help</p>
+                  <h4>{t('landing.support24_7')}</h4>
+                  <p>{t('landing.supportDesc')}</p>
                 </div>
               </div>
 
               <div className="trust-point">
                 <div className="check-icon">✓</div>
                 <div>
-                  <h4>Fraud Protection</h4>
-                  <p>Advanced monitoring catches suspicious activity instantly</p>
+                  <h4>{t('landing.fraudProtection')}</h4>
+                  <p>{t('landing.fraudDesc')}</p>
                 </div>
               </div>
             </div>
@@ -238,7 +232,7 @@ const Landing = () => {
               <Lock size={48} />
               <div>
                 <p className="security-label">SSL SECURE</p>
-                <p className="security-sub">Bank-Grade Encryption</p>
+                <p className="security-sub">{t('landing.bankGradeSecurity')}</p>
               </div>
             </div>
           </div>
@@ -248,14 +242,14 @@ const Landing = () => {
       {/* CTA Section */}
       <section className="cta-section">
         <div className="cta-content">
-          <h2>Ready to Experience Modern Banking?</h2>
-          <p>Join thousands of satisfied customers using O-rangeankus.</p>
+          <h2>{t('landing.ready')}</h2>
+          <p>{t('landing.joinThousands')}</p>
           <div className="cta-buttons">
             <Link to="/register" className="btn btn-primary-large">
-              Open Your Account Free
+              {t('landing.openAccountFree')}
             </Link>
             <Link to="/login" className="btn btn-secondary-large">
-              Sign In
+              {t('landing.signIn')}
             </Link>
           </div>
         </div>
@@ -270,30 +264,30 @@ const Landing = () => {
           </div> */}
 
           <div className="footer-section">
-            <h4>Quick Links</h4>
+            <h4>{t('landing.quickLinks')}</h4>
             <ul>
-              <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/contact">{t('landing.contactUs')}</Link></li>
             </ul>
           </div>
 
           <div className="footer-section">
-            <h4>Legal</h4>
+            <h4>{t('landing.legal')}</h4>
             <ul>
-              <li><Link to="/terms">Terms of Service</Link></li>
+              <li><Link to="/terms">{t('landing.termsOfService')}</Link></li>
             </ul>
           </div>
 
           <div className="footer-section">
-            <h4>Support</h4>
+            <h4>{t('landing.supportFooter')}</h4>
             <ul>
-              <li>Email: support@orangeankus.com</li>
-              <li>Phone: 1123347638</li>
+              <li>{t('landing.email')}</li>
+              <li>{t('landing.phone')}</li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2026 O-rangeankus Bank&Trust. All rights reserved.</p>
+          <p>{t('landing.copyright')}</p>
         </div>
       </footer>
       <ScrollToTopButton />

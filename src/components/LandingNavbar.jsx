@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
+import LanguageSwitcher from './LanguageSwitcher'
 import BankLogo from './BankLogo'
 import './LandingNavbar.css'
 
@@ -27,9 +28,10 @@ const LandingNavbar = () => {
             <BankLogo />
           </Link>
 
-          {/* Right side - Theme toggle + CTA buttons */}
+          {/* Right side - Theme toggle + Language switcher + CTA buttons */}
           <div className="navbar-right">
             <ThemeToggle />
+            <LanguageSwitcher />
             <Link to="/login" className="btn btn-nav-secondary">
               Login
             </Link>
