@@ -133,6 +133,7 @@ const AdminDashboard = () => {
       <div className="mb-4">
         <div className="d-flex flex-wrap gap-2 mb-3">
           <a href="/admin/users" className="btn btn-outline-secondary">Users</a>
+          <a href="/admin/balance" className="btn btn-outline-secondary">Balance Management</a>
           <a href="/admin/pending-transfers" className="btn btn-outline-secondary">Pending Transfers</a>
           <a href="/admin/transaction-dates" className="btn btn-outline-secondary">Transaction Dates</a>
           <a href="/admin/receipts" className="btn btn-outline-secondary">Receipts</a>

@@ -45,11 +45,12 @@ const AdminTransactionDates = () => {
         value_date: valueDate || null
       }
 
-      const resp = await axiosInstance.post('/admin/transactions/update-dates', payload)
+      const resp = await axiosInstance.put('/admin/transactions/update-dates', payload)
       if (resp.data.success) {
         setSuccess('Dates updated successfully')
         setError('')
         loadTransactions()
+        setSelected(null)
       } else {
         setError(resp.data.message || 'Failed to update dates')
       }

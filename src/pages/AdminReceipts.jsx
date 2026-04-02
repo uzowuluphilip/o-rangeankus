@@ -25,7 +25,8 @@ const AdminReceipts = () => {
   }, [])
 
   const downloadReceipt = (id) => {
-    const url = `${process.env.REACT_APP_BACKEND_URL || 'https://api.orangeankus.com/'}/transactions/receipt?id=${id}`
+    const baseURL = process.env.REACT_APP_BACKEND_URL || 'https://api.orangeankus.com'
+    const url = `${baseURL}/transactions/receipt?id=${id}`
     window.open(url, '_blank')
   }
 

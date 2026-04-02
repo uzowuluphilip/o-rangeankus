@@ -17,6 +17,7 @@ import TransactionHistory from './pages/TransactionHistory'
 import AccountStatements from './pages/AccountStatements'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminUsers from './pages/AdminUsers'
+import AdminBalance from './pages/AdminBalance'
 import AdminPendingTransfers from './pages/AdminPendingTransfers'
 import AdminTransactionDates from './pages/AdminTransactionDates'
 import AdminReceipts from './pages/AdminReceipts'
@@ -149,6 +150,14 @@ const App = () => {
               element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminUsers />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/balance"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminBalance />
                 </ProtectedRoute>
               }
             />
