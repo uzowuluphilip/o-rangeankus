@@ -360,21 +360,21 @@ const InternationalTransfer = () => {
         <div className="col-12 col-lg-4">
           <div className="card bg-dark">
             <div className="card-body">
-              <h6 className="card-title text-primary-orange mb-3"><Lightbulb size={20} className="me-2" style={{display: 'inline-block'}} /> What You Need</h6>
+              <h6 className="card-title text-primary-orange mb-3"><Lightbulb size={20} className="me-2" style={{display: 'inline-block'}} /> {t('internationalTransfer.whatYouNeed.title')}</h6>
               <ul className="small text-secondary mb-4 ps-3">
-                <li className="mb-2">Recipient's full name</li>
-                <li className="mb-2">IBAN or account number</li>
-                <li className="mb-2">SWIFT code (8-11 characters)</li>
-                <li>Recipient's country</li>
+                <li className="mb-2">{t('internationalTransfer.whatYouNeed.item1')}</li>
+                <li className="mb-2">{t('internationalTransfer.whatYouNeed.item2')}</li>
+                <li className="mb-2">{t('internationalTransfer.whatYouNeed.item3')}</li>
+                <li>{t('internationalTransfer.whatYouNeed.item4')}</li>
               </ul>
             </div>
           </div>
 
           <div className="card border-info mt-4">
             <div className="card-body">
-              <h6 className="card-title text-info mb-2"><Clock size={20} className="me-2" style={{display: 'inline-block'}} /> Processing Time</h6>
+              <h6 className="card-title text-info mb-2"><Clock size={20} className="me-2" style={{display: 'inline-block'}} /> {t('internationalTransfer.processingTime.title')}</h6>
               <p className="small text-secondary mb-0">
-                International transfers typically take 2-5 business days
+                {t('internationalTransfer.processingTime.description')}
               </p>
             </div>
           </div>

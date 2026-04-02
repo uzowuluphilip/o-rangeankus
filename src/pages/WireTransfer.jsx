@@ -293,12 +293,12 @@ const WireTransfer = () => {
           {/* Info box */}
           <div className="card mt-4 border-info">
             <div className="card-body">
-              <h6 className="card-title text-info mb-2">ℹ️ Information</h6>
+              <h6 className="card-title text-info mb-2">ℹ️ {t('wireTransfer.infoBox.title')}</h6>
               <ul className="small text-secondary mb-0">
-                <li>Wire transfers are processed immediately</li>
-                <li>You cannot cancel once submitted</li>
-                <li>Standard bank fees may apply</li>
-                <li>Recipient must have a valid bank account</li>
+                <li>{t('wireTransfer.infoBox.item1')}</li>
+                <li>{t('wireTransfer.infoBox.item2')}</li>
+                <li>{t('wireTransfer.infoBox.item3')}</li>
+                <li>{t('wireTransfer.infoBox.item4')}</li>
               </ul>
             </div>
           </div>
@@ -308,11 +308,11 @@ const WireTransfer = () => {
         <div className="col-12 col-lg-4">
           <div className="card bg-dark">
             <div className="card-body">
-              <h6 className="card-title text-primary-orange mb-3"><Lightbulb size={20} className="me-2" style={{display: 'inline-block'}} /> Tips</h6>
+              <h6 className="card-title text-primary-orange mb-3"><Lightbulb size={20} className="me-2" style={{display: 'inline-block'}} /> {t('wireTransfer.tips.title')}</h6>
               <ul className="small text-secondary mb-0 ps-3">
-                <li className="mb-2">Double-check the account number before submitting</li>
-                <li className="mb-2">Transfers to the same bank are faster</li>
-                <li className="mb-2">Keep the reference number for tracking</li>
+                <li className="mb-2">{t('wireTransfer.tips.item1')}</li>
+                <li className="mb-2">{t('wireTransfer.tips.item2')}</li>
+                <li className="mb-2">{t('wireTransfer.tips.item3')}</li>
               </ul>
             </div>
           </div>

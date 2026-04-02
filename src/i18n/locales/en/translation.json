@@ -255,6 +255,19 @@
       "routingNumber": "Routing Number",
       "amount": "Amount",
       "purpose": "Purpose"
+    },
+    "infoBox": {
+      "title": "Information",
+      "item1": "Wire transfers are processed immediately",
+      "item2": "You cannot cancel once submitted",
+      "item3": "Standard bank fees may apply",
+      "item4": "Recipient must have a valid bank account"
+    },
+    "tips": {
+      "title": "Tips",
+      "item1": "Double-check the account number before submitting",
+      "item2": "Transfers to the same bank are faster",
+      "item3": "Keep the reference number for tracking"
     }
   },
   "internationalTransfer": {
@@ -277,6 +290,17 @@
       "currency": "Currency",
       "amount": "Amount (USD)",
       "purpose": "Purpose"
+    },
+    "whatYouNeed": {
+      "title": "What You Need",
+      "item1": "Recipient's full name",
+      "item2": "IBAN or account number",
+      "item3": "SWIFT code (8-11 characters)",
+      "item4": "Recipient's country"
+    },
+    "processingTime": {
+      "title": "Processing Time",
+      "description": "International transfers typically take 2-5 business days"
     }
   },
   "directDeposit": {
@@ -292,7 +316,22 @@
     "downloadPDF": "Download PDF",
     "share": "Share",
     "failed": "Failed to load direct deposit info",
-    "failedDownload": "Failed to download PDF"
+    "failedDownload": "Failed to download PDF",
+    "benefits": {
+      "title": "Benefits",
+      "item1": "Automatic deposits",
+      "item2": "No processing fees",
+      "item3": "Faster paychecks",
+      "item4": "Enhanced security"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Your account information is encrypted and secure. Only share routing and account numbers with trusted employers."
+    },
+    "needHelp": {
+      "title": "Need Help?",
+      "description": "Contact our support team if you have questions about direct deposits."
+    }
   },
   "accountStatements": {
     "title": "Account Statements",
@@ -305,7 +344,14 @@
     "download": "Download",
     "downloading": "Downloading...",
     "downloadFailed": "Failed to download statement",
-    "failedLoad": "Failed to load statements"
+    "failedLoad": "Failed to load statements",
+    "about": {
+      "title": "About Your Statements",
+      "item1": "Statements are generated on the last day of each month",
+      "item2": "PDFs include detailed transaction history",
+      "item3": "Keep statements for tax and record-keeping purposes",
+      "item4": "Statements are available for download for 7 years"
+    }
   },
   "transactionHistory": {
     "title": "Transaction History",

@@ -253,6 +253,19 @@
       "routingNumber": "Routing-Nummer",
       "amount": "Betrag",
       "purpose": "Zweck"
+    },
+    "infoBox": {
+      "title": "Informationen",
+      "item1": "Überweisungen werden sofort bearbeitet",
+      "item2": "Sie können nicht nach dem Absenden stornieren",
+      "item3": "Es können Standardbankgebühren anfallen",
+      "item4": "Empfänger muss ein gültiges Bankkonto haben"
+    },
+    "tips": {
+      "title": "Tipps",
+      "item1": "Überprüfen Sie die Kontonummer vor dem Absenden",
+      "item2": "Überweisungen an der gleichen Bank sind schneller",
+      "item3": "Bewahren Sie die Referenznummer zum Nachverfolgen auf"
     }
   },
   "internationalTransfer": {
@@ -275,6 +288,17 @@
       "currency": "Währung",
       "amount": "Betrag (USD)",
       "purpose": "Zweck"
+    },
+    "whatYouNeed": {
+      "title": "Was Sie brauchen",
+      "item1": "Vollständiger Name des Empfängers",
+      "item2": "IBAN oder Kontonummer",
+      "item3": "SWIFT-Code (8-11 Zeichen)",
+      "item4": "Land des Empfängers"
+    },
+    "processingTime": {
+      "title": "Verarbeitungszeit",
+      "description": "Internationale Überweisungen dauern normalerweise 2-5 Geschäftstage"
     }
   },
   "directDeposit": {
@@ -290,7 +314,22 @@
     "downloadPDF": "PDF herunterladen",
     "share": "Teilen",
     "failed": "Fehler beim Laden der Direkteinzahlungsinformationen",
-    "failedDownload": "Fehler beim Herunterladen des PDF"
+    "failedDownload": "Fehler beim Herunterladen des PDF",
+    "benefits": {
+      "title": "Vorteile",
+      "item1": "Automatische Anzahlungen",
+      "item2": "Keine Bearbeitungsgebühren",
+      "item3": "Schnellere Gehaltszahlungen",
+      "item4": "Erhöhte Sicherheit"
+    },
+    "security": {
+      "title": "Sicherheit",
+      "description": "Ihre Kontoinformationen sind verschlüsselt und sicher. Teilen Sie Routing- und Kontonummern nur mit vertrauenswürdigen Arbeitgebern."
+    },
+    "needHelp": {
+      "title": "Benötigst du Hilfe?",
+      "description": "Wenden Sie sich an unser Support-Team, wenn Sie Fragen zu Direkteinzahlungen haben."
+    }
   },
   "accountStatements": {
     "title": "Kontoauszüge",
@@ -303,7 +342,14 @@
     "download": "Herunterladen",
     "downloading": "Wird heruntergeladen...",
     "downloadFailed": "Fehler beim Herunterladen des Kontoauszugs",
-    "failedLoad": "Fehler beim Laden der Kontoauszüge"
+    "failedLoad": "Fehler beim Laden von Kontoauszügen",
+    "about": {
+      "title": "Über Ihre Kontoauszüge",
+      "item1": "Kontoauszüge werden am letzten Tag des Monats generiert",
+      "item2": "PDFs enthalten detaillierte Transaktionshistorie",
+      "item3": "Bewahren Sie Kontoauszüge für Steuern und Archivierung auf",
+      "item4": "Kontoauszüge sind 7 Jahre zum Herunterladen verfügbar"
+    }
   },
   "transactionHistory": {
     "title": "Transaktionsverlauf",

@@ -175,12 +175,12 @@ const AccountStatements = () => {
       {/* Info box */}
       <div className="card border-info mt-5">
         <div className="card-body">
-          <h6 className="card-title text-info mb-2">ℹ️ About Your Statements</h6>
+          <h6 className="card-title text-info mb-2">ℹ️ {t('accountStatements.about.title')}</h6>
           <ul className="small text-secondary mb-0">
-            <li>Statements are generated on the last day of each month</li>
-            <li>PDFs include detailed transaction history</li>
-            <li>Keep statements for tax and record-keeping purposes</li>
-            <li>Statements are available for download for 7 years</li>
+            <li>{t('accountStatements.about.item1')}</li>
+            <li>{t('accountStatements.about.item2')}</li>
+            <li>{t('accountStatements.about.item3')}</li>
+            <li>{t('accountStatements.about.item4')}</li>
           </ul>
         </div>
       </div>

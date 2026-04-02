@@ -232,12 +232,12 @@ const DirectDeposit = () => {
           {/* Quick Benefits */}
           <div className="card bg-dark mb-4">
             <div className="card-body">
-              <h6 className="card-title text-primary-orange mb-3"><Sparkles size={20} className="me-2" style={{display: 'inline-block'}} /> Benefits</h6>
+              <h6 className="card-title text-primary-orange mb-3"><Sparkles size={20} className="me-2" style={{display: 'inline-block'}} /> {t('directDeposit.benefits.title')}</h6>
               <ul className="small text-secondary mb-0 ps-3">
-                <li className="mb-2">Automatic deposits</li>
-                <li className="mb-2">No processing fees</li>
-                <li className="mb-2">Faster paychecks</li>
-                <li>Enhanced security</li>
+                <li className="mb-2">{t('directDeposit.benefits.item1')}</li>
+                <li className="mb-2">{t('directDeposit.benefits.item2')}</li>
+                <li className="mb-2">{t('directDeposit.benefits.item3')}</li>
+                <li>{t('directDeposit.benefits.item4')}</li>
               </ul>
             </div>
           </div>
@@ -245,9 +245,9 @@ const DirectDeposit = () => {
           {/* Security Info */}
           <div className="card border-success mb-4">
             <div className="card-body">
-              <h6 className="card-title text-success mb-2"><Lock size={20} className="me-2" style={{display: 'inline-block'}} /> Security</h6>
+              <h6 className="card-title text-success mb-2"><Lock size={20} className="me-2" style={{display: 'inline-block'}} /> {t('directDeposit.security.title')}</h6>
               <p className="small text-secondary mb-0">
-                Your account information is encrypted and secure. Only share routing and account numbers with trusted employers.
+                {t('directDeposit.security.description')}
               </p>
             </div>
           </div>
@@ -255,9 +255,9 @@ const DirectDeposit = () => {
           {/* Support */}
           <div className="card border-info">
             <div className="card-body">
-              <h6 className="card-title text-info mb-2"><HelpCircle size={20} className="me-2" style={{display: 'inline-block'}} /> Need Help?</h6>
+              <h6 className="card-title text-info mb-2"><HelpCircle size={20} className="me-2" style={{display: 'inline-block'}} /> {t('directDeposit.needHelp.title')}</h6>
               <p className="small text-secondary mb-0">
-                Contact our support team if you have questions about direct deposits.
+                {t('directDeposit.needHelp.description')}
               </p>
             </div>
           </div>

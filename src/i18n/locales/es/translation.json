@@ -255,6 +255,19 @@
       "routingNumber": "Número de Ruta",
       "amount": "Cantidad",
       "purpose": "Propósito"
+    },
+    "infoBox": {
+      "title": "Información",
+      "item1": "Las transferencias bancarias se procesan inmediatamente",
+      "item2": "No puedes cancelar una vez enviada",
+      "item3": "Es posible que se apliquen comisiones bancarias estándar",
+      "item4": "El destinatario debe tener una cuenta bancaria válida"
+    },
+    "tips": {
+      "title": "Consejos",
+      "item1": "Verifica el número de cuenta antes de enviar",
+      "item2": "Las transferencias al mismo banco son más rápidas",
+      "item3": "guarda el número de referencia para seguimiento"
     }
   },
   "internationalTransfer": {
@@ -277,6 +290,17 @@
       "currency": "Moneda",
       "amount": "Cantidad (USD)",
       "purpose": "Propósito"
+    },
+    "whatYouNeed": {
+      "title": "Lo Que Necesitas",
+      "item1": "Nombre completo del destinatario",
+      "item2": "IBAN o número de cuenta",
+      "item3": "Código SWIFT (8-11 caracteres)",
+      "item4": "País del destinatario"
+    },
+    "processingTime": {
+      "title": "Tiempo de Procesamiento",
+      "description": "Las transferencias internacionales típicamente toman 2-5 días hábiles"
     }
   },
   "directDeposit": {
@@ -292,7 +316,22 @@
     "downloadPDF": "Descargar PDF",
     "share": "Compartir",
     "failed": "Error al cargar la información de depósito directo",
-    "failedDownload": "Error al descargar el PDF"
+    "failedDownload": "Error al descargar el PDF",
+    "benefits": {
+      "title": "Beneficios",
+      "item1": "Depósitos automáticos",
+      "item2": "Sin comisiones de procesamiento",
+      "item3": "Sueldos más rápidos",
+      "item4": "Seguridad mejorada"
+    },
+    "security": {
+      "title": "Seguridad",
+      "description": "Tu información de cuenta está encriptada y segura. Solo comparte números de ruta y cuenta con empleadores de confianza."
+    },
+    "needHelp": {
+      "title": "¿Necesitas Ayuda?",
+      "description": "Contacta a nuestro equipo de soporte si tienes preguntas sobre depósitos directos."
+    }
   },
   "accountStatements": {
     "title": "Estados de Cuenta",
@@ -305,7 +344,14 @@
     "download": "Descargar",
     "downloading": "Descargando...",
     "downloadFailed": "Error al descargar el estado de cuenta",
-    "failedLoad": "Error al cargar los estados de cuenta"
+    "failedLoad": "Error al cargar los estados de cuenta",
+    "about": {
+      "title": "Acerca de Tus Estados de Cuenta",
+      "item1": "Los estados se generan el último día de cada mes",
+      "item2": "Los PDFs incluyen historial de transacciones detallado",
+      "item3": "Guarda los estados para propósitos fiscales y de registro",
+      "item4": "Los estados están disponibles para descargar durante 7 años"
+    }
   },
   "transactionHistory": {
     "title": "Historial de Transacciones",

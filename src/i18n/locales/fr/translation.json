@@ -249,6 +249,19 @@
       "routingNumber": "Numéro d'acheminement",
       "amount": "Montant",
       "purpose": "Objet"
+    },
+    "infoBox": {
+      "title": "Information",
+      "item1": "Les virements bancaires sont traités immédiatement",
+      "item2": "Vous ne pouvez pas annuler après envoi",
+      "item3": "Des frais bancaires standard peuvent s'appliquer",
+      "item4": "Le bénéficiaire doit avoir un compte bancaire valide"
+    },
+    "tips": {
+      "title": "Conseils",
+      "item1": "Vérifiez le numéro de compte avant d'envoyer",
+      "item2": "Les virements à la même banque sont plus rapides",
+      "item3": "Gardez le numéro de référence pour le suivi"
     }
   },
   "internationalTransfer": {
@@ -271,6 +284,17 @@
       "currency": "Devise",
       "amount": "Montant (USD)",
       "purpose": "Objet"
+    },
+    "whatYouNeed": {
+      "title": "Ce Dont Vous Avez Besoin",
+      "item1": "Nom complet du bénéficiaire",
+      "item2": "IBAN ou numéro de compte",
+      "item3": "Code SWIFT (8-11 caractères)",
+      "item4": "Pays du bénéficiaire"
+    },
+    "processingTime": {
+      "title": "Délai de Traitement",
+      "description": "Les virements internationaux prennent généralement 2-5 jours ouvrables"
     }
   },
   "directDeposit": {
@@ -286,7 +310,22 @@
     "downloadPDF": "Télécharger le PDF",
     "share": "Partager",
     "failed": "Erreur lors du chargement des informations de dépôt direct",
-    "failedDownload": "Erreur lors du téléchargement du PDF"
+    "failedDownload": "Erreur lors du téléchargement du PDF",
+    "benefits": {
+      "title": "Avantages",
+      "item1": "Dépôts automatiques",
+      "item2": "Aucuns frais de traitement",
+      "item3": "Chèques de paie plus rapides",
+      "item4": "Sécurité améliorée"
+    },
+    "security": {
+      "title": "Sécurité",
+      "description": "Les informations de votre compte sont chiffrées et sécurisées. Partagez uniquement les numéros d'acheminement et de compte avec les employeurs de confiance."
+    },
+    "needHelp": {
+      "title": "Besoin d'Aide?",
+      "description": "Contactez notre équipe d'assistance si vous avez des questions sur les dépôts directs."
+    }
   },
   "accountStatements": {
     "title": "Relevés de Compte",
@@ -299,7 +338,14 @@
     "download": "Télécharger",
     "downloading": "Téléchargement...",
     "downloadFailed": "Erreur lors du téléchargement du relevé",
-    "failedLoad": "Erreur lors du chargement des relevés de compte"
+    "failedLoad": "Erreur lors du chargement des relevés",
+    "about": {
+      "title": "À Propos de Vos Relevés",
+      "item1": "Les relevés sont générés le dernier jour de chaque mois",
+      "item2": "Les PDFs incluent l'historique détaillé des transactions",
+      "item3": "Conservez les relevés à des fins fiscales et d'archivage",
+      "item4": "Les relevés peuvent être téléchargés pendant 7 ans"
+    }
   },
   "transactionHistory": {
     "title": "Historique des Transactions",
