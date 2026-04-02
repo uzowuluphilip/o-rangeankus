@@ -10,8 +10,7 @@
     "logout": "Abmelden",
     "dashboard": "Dashboard",
     "profile": "Profil",
-    "settings": "Einstellungen",
-    "welcome": "Willkommen"
+    "settings": "Einstellungen"
   },
   "header": {
     "welcome": "Willkommen bei Orange Bank",
@@ -228,13 +227,6 @@
     "bankGradeSecurity": "Bankengröße Sicherheit",
     "accountProtection": "Kontoschutz"
   },
-  "footer": {
-    "about": "Über Uns",
-    "privacy": "Datenschutzrichtlinie",
-    "terms": "AGB",
-    "contact": "Kontaktieren Sie uns",
-    "copyright": "© 2024 Orange Bank. Alle Rechte vorbehalten."
-  },
   "wireTransfer": {
     "title": "Überweisung",
     "subtitle": "Geld inland überweisen",
@@ -348,10 +340,10 @@
     "noStatements": "Noch keine Kontoauszüge verfügbar",
     "period": "Auszugszeitraum",
     "openingBalance": "Eröffnungssaldo",
-    "closingBalance": "Schlusssaldo",
+    "closingBalance": "Abschlusssaldo",
     "transactions": "Transaktionen",
     "download": "Herunterladen",
-    "downloading": "Wird heruntergeladen...",
+    "downloading": "Werden heruntergeladen...",
     "downloadFailed": "Fehler beim Herunterladen des Kontoauszugs",
     "failedLoad": "Fehler beim Laden von Kontoauszügen",
     "about": {
@@ -364,7 +356,7 @@
   },
   "transactionHistory": {
     "title": "Transaktionsverlauf",
-    "subtitle": "Transaktionen anzeigen und filtern",
+    "subtitle": "Zeigen Sie Ihre Transaktionen an und filtern Sie sie",
     "filters": "Filter",
     "filterByType": "Transaktionstyp",
     "startDate": "Startdatum",
@@ -372,28 +364,28 @@
     "allTypes": "Alle Typen",
     "clearFilters": "Filter löschen",
     "noTransactions": "Keine Transaktionen gefunden",
-    "failedLoad": "Fehler beim Laden der Transaktionen"
+    "failedLoad": "Fehler beim Laden von Transaktionen"
   },
   "contact": {
-    "title": "Kontaktieren Sie uns",
-    "subtitle": "Sprechen Sie mit dem O-rangeankus-Support",
-    "description": "Haben Sie eine Frage oder benötigen Hilfe bei Ihrem Konto? Unser Support-Team ist rund um die Uhr verfügbar, um Sie bei Überweisungen, Einzahlungen, Kontoeinrichtung und Sicherheit zu unterstützen.",
-    "needHelp": "Brauchen Sie schnelle Hilfe?",
-    "pickChannel": "Wählen Sie den für Sie besten Kanal.",
+    "title": "Kontaktieren Sie Uns",
+    "subtitle": "Mit O-rangeankus-Support sprechen",
+    "description": "Haben Sie eine Frage oder benötigen Sie Hilfe mit Ihrem Konto? Unser Support-Team ist rund um die Uhr verfügbar, um Sie bei Überweisungen, Einzahlungen, Kontoeinrichtung und Sicherheit zu unterstützen.",
+    "needHelp": "Benötigen Sie schnelle Hilfe?",
+    "pickChannel": "Wählen Sie den Kanal, der am besten für Sie funktioniert.",
     "email": "E-Mail",
     "phone": "Telefon",
     "reportIssue": "Problem melden",
-    "reportDescription": "Wenn Sie glauben, dass Ihr Konto verdächtige Aktivitäten aufweist, kontaktieren Sie uns sofort und wir leiten sofort eine Untersuchung ein.",
-    "accountGuidance": "Kontenführung",
-    "guidanceDescription": "Benötigen Sie Hilfe beim Einrichten von Direkteinzahlungen, Überweisungen oder Sicherheitseinstellungen? Unsere Experten are hier, um Sie bei jedem Schritt zu führen.",
-    "feedback": "Rückmeldung",
-    "feedbackDescription": "Ihr Feedback hilft uns, O-rangeankus zu verbessern. Teilen Sie Ihre Ideen mit und wir werden sie nutzen, um das Banking einfacher und sicherer zu machen."
+    "reportDescription": "Wenn Sie verdächtige Aktivitäten auf Ihrem Konto vermuten, kontaktieren Sie uns sofort und wir beginnen sofort mit einer Untersuchung.",
+    "accountGuidance": "Kontoverwaltung",
+    "guidanceDescription": "Benötigen Sie Hilfe beim Einrichten von Direkteinzahlungen, Überweisungen oder Sicherheitseinstellungen? Unsere Experten begleiten Sie bei jedem Schritt.",
+    "feedback": "Feedback",
+    "feedbackDescription": "Ihr Feedback hilft uns, O-rangeankus zu verbessern. Teilen Sie Ihre Ideen und wir nutzen sie, um das Banking einfacher und sicherer zu machen."
   },
   "terms": {
     "title": "Nutzungsbedingungen",
     "subtitle": "Rechtliche Bedingungen",
     "lastUpdated": "Zuletzt aktualisiert",
-    "acceptance": "Annahme der Bedingungen",
+    "acceptance": "Akzeptanz der Bedingungen",
     "acceptanceText": "Durch den Zugriff auf und die Nutzung dieser Website akzeptieren Sie die Bedingungen dieser Vereinbarung.",
     "useGuidelines": "Nutzungsrichtlinien",
     "prohibitedActivities": "Verbotene Aktivitäten",
@@ -401,18 +393,18 @@
     "disclaimer": "Haftungsausschluss"
   },
   "admin": {
-    "dashboard": "Admin Dashboard",
-    "manageOperations": "Verwalten Sie Benutzer, Transaktionen und Systemvorgänge",
+    "dashboard": "Admin-Dashboard",
+    "manageOperations": "Verwalten Sie Benutzer, Transaktionen und Systemoperationen",
     "users": "Benutzer",
-    "balanceManagement": "Saldenmanagement",
+    "balanceManagement": "Saldoverwaltung",
     "pendingTransfers": "Ausstehende Überweisungen",
     "transactionDates": "Transaktionsdaten",
     "receipts": "Quittungen",
-    "failedLoad": "Fehler beim Laden der Admin-Daten",
+    "failedLoad": "Fehler beim Laden von Admin-Daten",
     "noAccess": "Sie haben keinen Admin-Zugriff",
     "permissionDenied": "Sie haben keine Berechtigung, auf diese Seite zuzugreifen",
     "authExpired": "Authentifizierung abgelaufen. Bitte melden Sie sich erneut an.",
-    "freezeConfirm": "Sind Sie sicher, dass Sie dieses Konto einfrieren möchten?",
+    "freezeConfirm": "Sind Sie sicher, dass Sie dieses Konto sperren möchten?",
     "freezeFailed": "Fehler beim Aktualisieren des Kontostatus"
   }
 }
