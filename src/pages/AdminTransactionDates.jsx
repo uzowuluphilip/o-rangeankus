@@ -74,14 +74,14 @@ const AdminTransactionDates = () => {
         {loading ? (
           <div className="spinner-border text-warning" role="status"><span className="visually-hidden">Loading...</span></div>
         ) : (
-          <div className="table-responsive" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+          <div className="table-responsive-wrapper" style={{ maxHeight: '300px', overflowY: 'auto' }}>
             <table className="table table-dark table-hover">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th className="hide-on-mobile">ID</th>
                   <th>User</th>
                   <th>Amount</th>
-                  <th>Type</th>
+                  <th className="hide-on-mobile">Type</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -89,11 +89,11 @@ const AdminTransactionDates = () => {
               <tbody>
                 {transactions.map(txn => (
                   <tr key={txn.transaction_id} className={selected?.transaction_id === txn.transaction_id ? 'table-primary' : ''}>
-                    <td>{txn.transaction_id}</td>
-                    <td>{txn.first_name} {txn.last_name}</td>
-                    <td>${Number(txn.amount).toFixed(2)}</td>
-                    <td>{txn.transaction_type || txn.type}</td>
-                    <td>{txn.status}</td>
+                    <td className="hide-on-mobile"><small>{txn.transaction_id}</small></td>
+                    <td><small>{txn.first_name} {txn.last_name}</small></td>
+                    <td><strong>${Number(txn.amount).toFixed(2)}</strong></td>
+                    <td className="hide-on-mobile"><small>{txn.transaction_type || txn.type}</small></td>
+                    <td><span className={`badge bg-${txn.status === 'completed' ? 'success' : 'warning'}`}>{txn.status}</span></td>
                     <td>
                       <button className="btn btn-sm btn-outline-light" onClick={() => selectTransaction(txn)}>Edit dates</button>
                     </td>

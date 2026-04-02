@@ -50,26 +50,26 @@ const AdminUsers = () => {
       {loading ? (
         <div className="spinner-border text-warning" role="status"><span className="visually-hidden">Loading...</span></div>
       ) : (
-        <div className="table-responsive">
+        <div className="table-responsive-wrapper">
           <table className="table table-dark table-hover align-middle">
             <thead>
               <tr>
-                <th>ID</th>
+                <th className="hide-on-mobile">ID</th>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Account Locked</th>
+                <th className="hide-on-mobile">Email</th>
+                <th className="hide-on-mobile">Role</th>
+                <th>Locked</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map(user => (
                 <tr key={user.id}>
-                  <td>{user.id}</td>
+                  <td className="hide-on-mobile">{user.id}</td>
                   <td>{user.first_name || '—'} {user.last_name || ''}</td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
-                  <td>{user.is_frozen ? 'Yes' : 'No'}</td>
+                  <td className="hide-on-mobile">{user.email}</td>
+                  <td className="hide-on-mobile">{user.role}</td>
+                  <td className="text-center">{user.is_frozen ? '🔒' : '✓'}</td>
                   <td>
                     <button
                       className={`btn btn-sm ${user.is_frozen ? 'btn-success' : 'btn-danger'}`}

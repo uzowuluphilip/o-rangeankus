@@ -44,13 +44,13 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
   }
 
   return (
-    <div className="table-responsive">
+    <div className="table-responsive-wrapper">
       <table className="table table-dark table-hover align-middle">
         <thead>
           <tr>
             <th>Date</th>
             <th>Type</th>
-            <th>Description</th>
+            <th className="hide-on-mobile">Description</th>
             <th>Amount</th>
             <th>Status</th>
           </tr>
@@ -60,7 +60,7 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
             <tr key={transaction.id || transaction.transaction_id || `transaction-${index}`}>
               <td>{new Date(transaction.created_at).toLocaleDateString()}</td>
               <td className="fw-bold">{transaction.type || 'Transfer'}</td>
-              <td className="text-secondary">{transaction.description || '-'}</td>
+              <td className="text-secondary hide-on-mobile description-cell">{transaction.description || '-'}</td>
               <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
                 {transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount).toFixed(2)}
               </td>

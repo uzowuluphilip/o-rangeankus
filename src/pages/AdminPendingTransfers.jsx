@@ -46,27 +46,27 @@ const AdminPendingTransfers = () => {
       {loading ? (
         <div className="spinner-border text-warning" role="status"><span className="visually-hidden">Loading...</span></div>
       ) : (
-        <div className="table-responsive">
+        <div className="table-responsive-wrapper">
           <table className="table table-dark table-hover align-middle">
             <thead>
               <tr>
-                <th>ID</th>
+                <th className="hide-on-mobile">ID</th>
                 <th>User</th>
                 <th>Amount</th>
                 <th>Status</th>
-                <th>Requested At</th>
+                <th className="hide-on-mobile">Date</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {requests.length ? requests.map(req => (
                 <tr key={req.withdrawal_id}>
-                  <td>{req.withdrawal_id}</td>
-                  <td>{req.first_name} {req.last_name} ({req.email})</td>
-                  <td>${Number(req.amount).toFixed(2)}</td>
-                  <td>{req.status}</td>
-                  <td>{req.created_at}</td>
-                  <td>
+                  <td className="hide-on-mobile">{req.withdrawal_id}</td>
+                  <td><strong>{req.first_name} {req.last_name}</strong></td>
+                  <td><strong>${Number(req.amount).toFixed(2)}</strong></td>
+                  <td><span className="badge bg-warning text-dark">{req.status}</span></td>
+                  <td className="hide-on-mobile small">{new Date(req.created_at).toLocaleDateString()}</td>
+                  <td className="action-buttons d-flex gap-2">
                     <button className="btn btn-success btn-sm me-2" onClick={() => changeStatus(req.withdrawal_id, true)}>Approve</button>
                     <button className="btn btn-danger btn-sm" onClick={() => changeStatus(req.withdrawal_id, false)}>Decline</button>
                   </td>

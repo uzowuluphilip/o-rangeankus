@@ -195,13 +195,13 @@ const AdminDashboard = () => {
           </div>
 
           <div className="card">
-            <div className="table-responsive">
+            <div className="table-responsive-wrapper">
               <table className="table table-dark table-hover align-middle mb-0">
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Created</th>
+                    <th className="hide-on-mobile">Email</th>
+                    <th className="hide-on-mobile">Created</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -222,8 +222,8 @@ const AdminDashboard = () => {
                             : user.name || user.email || 'N/A'
                           }
                         </td>
-                        <td className="text-secondary">{user.email || 'N/A'}</td>
-                        <td className="text-secondary">
+                        <td className="text-secondary hide-on-mobile">{user.email || 'N/A'}</td>
+                        <td className="text-secondary hide-on-mobile small">
                           {user.created_at 
                             ? new Date(user.created_at).toLocaleDateString()
                             : 'Unknown Date'
