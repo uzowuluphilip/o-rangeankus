@@ -102,6 +102,11 @@
   color: var(--text-secondary);
 }
 
+.info-list div p a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .info-section {
   max-width: 1200px;
   margin: 0 auto;

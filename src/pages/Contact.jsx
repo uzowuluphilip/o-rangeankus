@@ -32,11 +32,15 @@ const Contact = () => {
               <div className="info-list">
                 <div>
                   <span>{t('contact.email')}</span>
-                  <p>support@O-rangeankus.com</p>
+                  <p><a href="mailto:support@orangeankus.com">support@orangeankus.com</a></p>
                 </div>
                 <div>
                   <span>{t('contact.phone')}</span>
-                  <p>+1 (123) 347-638</p>
+                  <p><a href="tel:+18459577340">+1(845)957-7340</a></p>
+                </div>
+                <div>
+                  <span>{t('contact.address')}</span>
+                  <p>212 Dolson Ave, Middletown, NY 10940, United States</p>
                 </div>
               </div>
             </div>

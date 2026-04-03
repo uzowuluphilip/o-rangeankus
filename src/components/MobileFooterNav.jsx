@@ -49,14 +49,14 @@ const MobileFooterNav = () => {
         )
       })}
 
-      <button
+      {/* <button
         className="footer-navbar-item logout-btn"
         onClick={handleLogout}
         title="Logout"
       >
         <LogOut size={24} />
         <span>Logout</span>
-      </button>
+      </button> */}
     </div>
   )
 }

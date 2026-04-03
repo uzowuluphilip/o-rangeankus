@@ -20,6 +20,10 @@ const LandingNavbar = () => {
   const { t } = useTranslation()
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const handleMenuLinkClick = () => {
+    setMenuOpen(false)
+  }
+
   return (
     <nav className="landing-navbar">
       <div className="container-fluid">
@@ -30,8 +34,8 @@ const LandingNavbar = () => {
             <BankLogo />
           </Link>
 
-          {/* Right side - Theme toggle + Language switcher + CTA buttons */}
-          <div className="navbar-right">
+          {/* Desktop: Theme toggle + Language switcher + CTA buttons */}
+          <div className="navbar-right d-none d-lg-flex">
             <ThemeToggle />
             <LanguageSwitcher />
             <Link to="/login" className="btn btn-nav-secondary">
@@ -42,29 +46,37 @@ const LandingNavbar = () => {
             </Link>
           </div>
 
-          {/* Mobile menu toggle (hidden by default) */}
-          <button
-            className="navbar-mobile-toggle"
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? t('common.closeMenu') : t('common.openMenu')}
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile: Theme toggle + Language switcher + Hamburger menu */}
+          <div className="navbar-mobile d-lg-none d-flex align-items-center gap-2">
+            <ThemeToggle />
+            <LanguageSwitcher />
+
+            {/* Hamburger button */}
+            <button
+              className="navbar-mobile-toggle"
+              type="button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? t('common.closeMenu') : t('common.openMenu')}
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
+        {/* Mobile menu - Dropdown with pages */}
         <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <Link to="/contact" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
+          <Link to="/contact" className="mobile-menu-link" onClick={handleMenuLinkClick}>
             {t('nav.contact')}
           </Link>
-          <Link to="/terms" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
+          <Link to="/terms" className="mobile-menu-link" onClick={handleMenuLinkClick}>
             {t('landing.termsOfService')}
           </Link>
-          <Link to="/login" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
+          <div className="mobile-menu-divider"></div>
+          <Link to="/login" className="mobile-menu-link" onClick={handleMenuLinkClick}>
             {t('nav.login')}
           </Link>
-          <Link to="/register" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>
+          <Link to="/register" className="mobile-menu-link" onClick={handleMenuLinkClick}>
             {t('nav.register')}
           </Link>
         </div>

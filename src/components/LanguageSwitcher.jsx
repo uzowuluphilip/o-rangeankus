@@ -11,7 +11,8 @@ import './LanguageSwitcher.css'
  * Saves language preference to localStorage
  * Features:
  * - Auto-detects outside clicks to close dropdown
- * - Responsive (icon only on mobile, full name on desktop)
+ * - Responsive: shows short code on mobile (≤480px), full name on desktop
+ * - Always visible on all screen sizes
  * - Highlights active language
  * - Keyboard support (Escape key closes dropdown)
  */
@@ -21,10 +22,10 @@ const LanguageSwitcher = () => {
   const containerRef = useRef(null)
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' }
+    { code: 'en', name: 'English', short: 'EN', flag: '🇺🇸' },
+    { code: 'es', name: 'Español', short: 'ES', flag: '🇪🇸' },
+    { code: 'de', name: 'Deutsch', short: 'DE', flag: '🇩🇪' },
+    { code: 'fr', name: 'Français', short: 'FR', flag: '🇫🇷' }
   ]
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0]
@@ -74,8 +75,10 @@ const LanguageSwitcher = () => {
         aria-label="Change language"
         aria-expanded={isOpen}
       >
-        <Globe size={20} className="language-icon" />
-        <span className="language-name">{currentLanguage.name}</span>
+        <Globe size={18} className="language-icon" />
+        {/* Show full name on desktop, short code on mobile */}
+        <span className="lang-full">{currentLanguage.name}</span>
+        <span className="lang-short">{currentLanguage.short}</span>
       </button>
 
       {isOpen && (

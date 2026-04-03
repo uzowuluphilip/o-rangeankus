@@ -39,6 +39,8 @@ const VideoSection = () => {
           }
           .video-wrapper {
             aspect-ratio: 16/9 !important;
+            width: 100% !important;
+            max-width: none !important;
           }
           .center-play-button {
             width: 52px !important;
@@ -51,6 +53,8 @@ const VideoSection = () => {
           }
           .video-wrapper {
             aspect-ratio: 21/9 !important;
+            max-width: 90% !important;
+            margin: 0 auto !important;
           }
           .center-play-button {
             width: 64px !important;
