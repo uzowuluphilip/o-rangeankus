@@ -416,5 +416,11 @@
     "authExpired": "Authentication expired. Please login again.",
     "freezeConfirm": "Are you sure you want to freeze this account?",
     "freezeFailed": "Failed to update account status"
+  },
+  "video": {
+    "badge": "▶ Watch It In Action",
+    "title": "See How",
+    "highlight": "O-rangeankus",
+    "subtitle": "Works"
   }
 }

@@ -416,5 +416,11 @@
     "authExpired": "Autenticación expirada. Por favor inicia sesión de nuevo.",
     "freezeConfirm": "¿Estás seguro de que deseas congelar esta cuenta?",
     "freezeFailed": "Error al actualizar el estado de la cuenta"
+  },
+  "video": {
+    "badge": "▶ Míralo En Acción",
+    "title": "Descubre Cómo",
+    "highlight": "O-rangeankus",
+    "subtitle": "Funciona"
   }
 }

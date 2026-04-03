@@ -410,5 +410,11 @@
     "authExpired": "Authentification expirée. Veuillez vous reconnecter.",
     "freezeConfirm": "Êtes-vous sûr de vouloir geler ce compte?",
     "freezeFailed": "Erreur lors de la mise à jour du statut du compte"
+  },
+  "video": {
+    "badge": "▶ Regardez-Le En Action",
+    "title": "Découvrez Comment",
+    "highlight": "O-rangeankus",
+    "subtitle": "Fonctionne"
   }
 }

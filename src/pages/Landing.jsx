@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Zap, Globe, Shield, Clock, TrendingUp, Lock } from 'lucide-react'
 import LandingNavbar from '../components/LandingNavbar'
 import ScrollToTopButton from '../components/ScrollToTopButton'
+import VideoSection from '../components/VideoSection'
 import './Landing.css'
 
 /**
@@ -238,6 +239,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+      {/* Video Section */}
+      <VideoSection />
 
       {/* CTA Section */}
       <section className="cta-section">

@@ -406,5 +406,11 @@
     "authExpired": "Authentifizierung abgelaufen. Bitte melden Sie sich erneut an.",
     "freezeConfirm": "Sind Sie sicher, dass Sie dieses Konto sperren möchten?",
     "freezeFailed": "Fehler beim Aktualisieren des Kontostatus"
+  },
+  "video": {
+    "badge": "▶ Sieh Es In Aktion",
+    "title": "So Funktioniert",
+    "highlight": "O-rangeankus",
+    "subtitle": ""
   }
 }
