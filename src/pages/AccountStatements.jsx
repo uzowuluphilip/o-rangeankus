@@ -172,18 +172,20 @@ const AccountStatements = () => {
         </div>
       )}
 
-      {/* Info box */}
-      <div className="card border-info mt-5">
-        <div className="card-body">
-          <h6 className="card-title text-info mb-2">ℹ️ {t('accountStatements.about.title')}</h6>
-          <ul className="small text-secondary mb-0">
-            <li>{t('accountStatements.about.item1')}</li>
-            <li>{t('accountStatements.about.item2')}</li>
-            <li>{t('accountStatements.about.item3')}</li>
-            <li>{t('accountStatements.about.item4')}</li>
-          </ul>
+      {/* Info box - Only show when user has statements */}
+      {statements.length > 0 && (
+        <div className="card border-info mt-5">
+          <div className="card-body">
+            <h6 className="card-title text-info mb-2">ℹ️ {t('accountStatements.about.title')}</h6>
+            <ul className="small text-secondary mb-0">
+              <li>{t('accountStatements.about.item1')}</li>
+              <li>{t('accountStatements.about.item2')}</li>
+              <li>{t('accountStatements.about.item3')}</li>
+              <li>{t('accountStatements.about.item4')}</li>
+            </ul>
+          </div>
         </div>
-      </div>
+      )}
     </DashboardLayout>
   )
 }
