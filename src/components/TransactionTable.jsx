@@ -58,8 +58,12 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
         <tbody>
           {transactions.map((transaction, index) => (
             <tr key={transaction.id || transaction.transaction_id || `transaction-${index}`}>
-              <td>{new Date(transaction.created_at).toLocaleDateString()}</td>
-              <td className="fw-bold">{transaction.type || 'Transfer'}</td>
+              <td>{new Date(transaction.posting_date || transaction.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric'
+              })}</td>
+              <td className="fw-bold">{transaction.type_display || transaction.type || transaction.transaction_type || 'Transfer'}</td>
               <td className="text-secondary hide-on-mobile description-cell">{transaction.description || '-'}</td>
               <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
                 {transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount).toFixed(2)}

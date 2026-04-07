@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
+import TransactionReceiptModal from '../components/TransactionReceiptModal'
+import { useAuth } from '../context/AuthContext'
 import { Globe, Lightbulb, Clock } from 'lucide-react'
 
 /**
@@ -17,6 +19,7 @@ import { Globe, Lightbulb, Clock } from 'lucide-react'
  */
 const InternationalTransfer = () => {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     recipientName: '',
     country: '',
@@ -31,6 +34,8 @@ const InternationalTransfer = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showReceipt, setShowReceipt] = useState(false)
+  const [receiptData, setReceiptData] = useState(null)
   const navigate = useNavigate()
 
   // Supported currencies with exchange rates (mock data - replace with real API)
@@ -103,7 +108,7 @@ const InternationalTransfer = () => {
 
     setLoading(true)
     try {
-      await axiosInstance.post('/transactions/simulate', {
+      const response = await axiosInstance.post('/transactions/simulate', {
         type: 'international',
         recipient_name: formData.recipientName,
         country: formData.country,
@@ -114,8 +119,29 @@ const InternationalTransfer = () => {
         purpose: formData.purpose
       })
 
-      setSuccess(t('internationalTransfer.transferInitiated'))
-      
+      // Debug: Log the full response structure
+      console.log('Full API response:', response.data)
+      console.log('Transaction data:', JSON.stringify(response.data, null, 2))
+
+      // ✅ Set receipt data from the API response
+      setReceiptData({
+        id: response.data.transaction_id || response.data?.id,
+        reference: response.data.reference_code || response.data?.reference,
+        type: response.data.type || 'International Transfer',
+        amount: response.data.amount || formData.amount,
+        recipient: formData.recipientName,
+        description: formData.purpose || 'International Transfer',
+        status: response.data.status || 'completed',
+        posting_date: response.data.posting_date || new Date().toISOString(),
+        value_date: response.data.value_date || new Date().toISOString(),
+        sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
+        country: formData.country,
+        currency: formData.currency,
+        swiftCode: formData.swiftCode
+      })
+      // ✅ Show the receipt modal immediately
+      setShowReceipt(true)
+
       // Reset form
       setFormData({
         recipientName: '',
@@ -126,9 +152,6 @@ const InternationalTransfer = () => {
         amount: '',
         purpose: ''
       })
-
-      // Redirect to dashboard after 2 seconds
-      setTimeout(() => navigate('/dashboard'), 2000)
     } catch (err) {
       const message = err.response?.data?.message || t('internationalTransfer.transferFailed')
       setError(message)
@@ -380,6 +403,19 @@ const InternationalTransfer = () => {
           </div>
         </div>
       </div>
+
+      {/* Transaction Receipt Modal */}
+      {showReceipt && receiptData && (
+        <TransactionReceiptModal
+          receipt={receiptData}
+          onClose={() => {
+            setShowReceipt(false)
+            setReceiptData(null)
+            // Redirect to dashboard after closing receipt
+            setTimeout(() => navigate('/dashboard'), 500)
+          }}
+        />
+      )}
     </DashboardLayout>
   )
 }

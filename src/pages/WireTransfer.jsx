@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
+import TransactionReceiptModal from '../components/TransactionReceiptModal'
+import { useAuth } from '../context/AuthContext'
 import { DollarSign, Lightbulb } from 'lucide-react'
 
 /**
@@ -17,6 +19,7 @@ import { DollarSign, Lightbulb } from 'lucide-react'
  */
 const WireTransfer = () => {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     recipientName: '',
     bank: '',
@@ -29,6 +32,8 @@ const WireTransfer = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showReceipt, setShowReceipt] = useState(false)
+  const [receiptData, setReceiptData] = useState(null)
   const navigate = useNavigate()
 
   // Handle form field changes
@@ -100,19 +105,36 @@ const WireTransfer = () => {
         purpose: formData.purpose
       })
 
-      setSuccess(t('wireTransfer.wireInitiated'))
-      
+      // Debug: Log the full response structure
+      console.log('Full API response:', response.data)
+      console.log('Transaction data:', JSON.stringify(response.data, null, 2))
+
+      // ✅ Set receipt data from the API response
+      setReceiptData({
+        id: response.data.transaction_id || response.data?.id,
+        reference: response.data.reference_code || response.data?.reference,
+        type: response.data.type || 'Wire Transfer',
+        amount: response.data.amount || formData.amount,
+        recipient: formData.recipientName,
+        description: formData.purpose || 'Wire Transfer',
+        status: response.data.status || 'completed',
+        posting_date: response.data.posting_date || new Date().toISOString(),
+        value_date: response.data.value_date || new Date().toISOString(),
+        sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
+        bank: formData.bank
+      })
+      // ✅ Show the receipt modal immediately
+      setShowReceipt(true)
+
       // Reset form
       setFormData({
         recipientName: '',
         bank: '',
         accountNumber: '',
+        routingNumber: '',
         amount: '',
         purpose: ''
       })
-
-      // Redirect to dashboard after 2 seconds
-      setTimeout(() => navigate('/dashboard'), 2000)
     } catch (err) {
       const message = err.response?.data?.message || t('wireTransfer.wireFailed')
       setError(message)
@@ -318,6 +340,19 @@ const WireTransfer = () => {
           </div>
         </div>
       </div>
+
+      {/* Transaction Receipt Modal */}
+      {showReceipt && receiptData && (
+        <TransactionReceiptModal
+          receipt={receiptData}
+          onClose={() => {
+            setShowReceipt(false)
+            setReceiptData(null)
+            // Redirect to dashboard after closing receipt
+            setTimeout(() => navigate('/dashboard'), 500)
+          }}
+        />
+      )}
     </DashboardLayout>
   )
 }

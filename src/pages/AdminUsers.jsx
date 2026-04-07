@@ -25,6 +25,17 @@ const AdminUsers = () => {
   }, [])
 
   const toggleLock = async (userId, currentFrozen) => {
+    // Show confirmation dialog based on action
+    const confirmMessage = currentFrozen 
+      ? 'Are you sure you want to unfreeze this account?' 
+      : 'Are you sure you want to freeze this account?'
+    
+    const confirmed = window.confirm(confirmMessage)
+    
+    if (!confirmed) {
+      return // User clicked Cancel
+    }
+
     try {
       const response = await axiosInstance.post('/admin/user/freeze', {
         id: userId,
@@ -32,9 +43,15 @@ const AdminUsers = () => {
       })
       if (response.data.success) {
         setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_frozen: !currentFrozen } : u))
+        // Show success message
+        const successMessage = currentFrozen 
+          ? 'Account unfrozen successfully. User can now login and make transactions.' 
+          : 'Account frozen successfully. User cannot login or make transactions.'
+        alert(successMessage)
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to update lock status')
+      alert('Error: ' + (err.response?.data?.message || err.message || 'Failed to update lock status'))
     }
   }
 
@@ -58,7 +75,8 @@ const AdminUsers = () => {
                 <th>Name</th>
                 <th className="hide-on-mobile">Email</th>
                 <th className="hide-on-mobile">Role</th>
-                <th>Locked</th>
+                <th>Created</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -69,13 +87,23 @@ const AdminUsers = () => {
                   <td>{user.first_name || '—'} {user.last_name || ''}</td>
                   <td className="hide-on-mobile">{user.email}</td>
                   <td className="hide-on-mobile">{user.role}</td>
-                  <td className="text-center">{user.is_frozen ? '🔒' : '✓'}</td>
+                  <td>
+                    {user.created_at 
+                      ? new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                      : 'Unknown Date'
+                    }
+                  </td>
+                  <td className="text-center">
+                    <span className={`badge ${user.is_frozen ? 'bg-danger' : 'bg-success'}`}>
+                      {user.is_frozen ? 'Locked' : 'Active'}
+                    </span>
+                  </td>
                   <td>
                     <button
                       className={`btn btn-sm ${user.is_frozen ? 'btn-success' : 'btn-danger'}`}
                       onClick={() => toggleLock(user.id, user.is_frozen)}
                     >
-                      {user.is_frozen ? 'Unlock' : 'Lock'}
+                      {user.is_frozen ? 'Unlock' : 'Freeze'}
                     </button>
                   </td>
                 </tr>

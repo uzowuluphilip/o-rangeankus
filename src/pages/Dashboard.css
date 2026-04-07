@@ -92,10 +92,13 @@
 }
 
 .card-value {
-  font-size: 1.75rem;
-  font-weight: 800;
+  font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0.5rem 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-footer {
@@ -322,7 +325,7 @@
   }
 
   .card-value {
-    font-size: 1.5rem;
+    font-size: clamp(0.85rem, 1.5vw, 1.15rem);
   }
 }
 
@@ -384,7 +387,7 @@
   }
 
   .card-value {
-    font-size: 1.25rem;
+    font-size: clamp(0.85rem, 1.5vw, 1.15rem);
   }
 
   .section-title {

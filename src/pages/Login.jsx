@@ -196,6 +196,13 @@ const Login = () => {
                   </>
                 )}
               </button>
+
+              {/* Forgot password link */}
+              <div style={{ textAlign: 'center', marginTop: '15px' }}>
+                <Link to="/forgot-password" className="link-primary" style={{ fontSize: '14px' }}>
+                  {t('auth.forgotPassword') || 'Forgot Password?'}
+                </Link>
+              </div>
             </form>
 
             {/* Divider */}

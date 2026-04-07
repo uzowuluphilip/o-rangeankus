@@ -130,21 +130,21 @@ const AccountStatements = () => {
                   <div className="mb-4 flex-grow-1">
                     <div className="mb-3">
                     <p className="text-secondary small mb-1">{t('accountStatements.openingBalance')}</p>
-                      <p className="text-primary-text fw-bold">
+                      <p className="text-primary-text fw-bold" style={{ fontSize: '0.95rem' }}>
                         ${statement.opening_balance?.toFixed(2) || '0.00'}
                       </p>
                     </div>
 
                     <div className="mb-3">
                     <p className="text-secondary small mb-1">{t('accountStatements.closingBalance')}</p>
-                      <p className="text-success fw-bold">
+                      <p className="text-success fw-bold" style={{ fontSize: '0.95rem' }}>
                         ${statement.closing_balance?.toFixed(2) || '0.00'}
                       </p>
                     </div>
 
                     <div>
                       <p className="text-secondary small mb-1">{t('accountStatements.transactions')}</p>
-                      <p className="text-primary-orange fw-bold">
+                      <p className="text-primary-orange fw-bold" style={{ fontSize: '0.95rem' }}>
                         {statement.transactions_count || 0}
                       </p>
                     </div>

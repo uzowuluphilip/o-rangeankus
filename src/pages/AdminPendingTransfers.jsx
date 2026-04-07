@@ -3,45 +3,71 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 
 const AdminPendingTransfers = () => {
-  const [requests, setRequests] = useState([])
+  const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [actionInProgress, setActionInProgress] = useState(null)
 
-  const loadPending = async () => {
+  const loadPendingTransactions = async () => {
     try {
       setLoading(true)
-      const resp = await axiosInstance.get('/withdrawals/pending?status=pending')
-      setRequests(resp.data.data || [])
+      const resp = await axiosInstance.get('/admin/transactions/pending?limit=100')
+      setTransactions(resp.data.data || [])
       setError('')
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Error loading pending transfers')
+      setError(err.response?.data?.message || err.message || 'Error loading pending transactions')
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    loadPending()
+    loadPendingTransactions()
   }, [])
 
-  const changeStatus = async (withdrawalId, approve) => {
+  const approveTransaction = async (transactionId) => {
     try {
-      const url = approve ? '/withdrawals/approve' : '/withdrawals/reject'
-      await axiosInstance.post(url, { withdrawal_id: withdrawalId })
-      await loadPending()
+      setActionInProgress(transactionId)
+      await axiosInstance.post('/admin/transactions/approve', { transaction_id: transactionId })
+      setError('')
+      await loadPendingTransactions()
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Action failed')
+      setError(err.response?.data?.message || err.message || 'Failed to approve transaction')
+    } finally {
+      setActionInProgress(null)
+    }
+  }
+
+  const rejectTransaction = async (transactionId) => {
+    try {
+      setActionInProgress(transactionId)
+      await axiosInstance.post('/admin/transactions/reject', { transaction_id: transactionId })
+      setError('')
+      await loadPendingTransactions()
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to reject transaction')
+    } finally {
+      setActionInProgress(null)
     }
   }
 
   return (
     <DashboardLayout>
       <div className="mb-5">
-        <h1 className="h3 text-primary-text mb-2">Pending Transfer Approvals</h1>
-        <p className="text-secondary">Approve or reject pending transfer requests.</p>
+        <h1 className="h3 text-primary-text mb-2">Pending Transaction Approvals</h1>
+        <p className="text-secondary">Review and approve or reject pending transactions from users.</p>
       </div>
 
-      {error && <div className="alert alert-danger">{error}</div>}
+      {error && (
+        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          {error}
+          <button
+            type="button"
+            className="btn-close btn-close-white"
+            onClick={() => setError('')}
+          ></button>
+        </div>
+      )}
 
       {loading ? (
         <div className="spinner-border text-warning" role="status"><span className="visually-hidden">Loading...</span></div>
@@ -52,27 +78,43 @@ const AdminPendingTransfers = () => {
               <tr>
                 <th className="hide-on-mobile">ID</th>
                 <th>User</th>
+                <th>Type</th>
                 <th>Amount</th>
-                <th>Status</th>
+                <th>Description</th>
                 <th className="hide-on-mobile">Date</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {requests.length ? requests.map(req => (
-                <tr key={req.withdrawal_id}>
-                  <td className="hide-on-mobile">{req.withdrawal_id}</td>
-                  <td><strong>{req.first_name} {req.last_name}</strong></td>
-                  <td><strong>${Number(req.amount).toFixed(2)}</strong></td>
-                  <td><span className="badge bg-warning text-dark">{req.status}</span></td>
-                  <td className="hide-on-mobile small">{new Date(req.created_at).toLocaleDateString()}</td>
+              {transactions.length ? transactions.map(txn => (
+                <tr key={txn.transaction_id}>
+                  <td className="hide-on-mobile small">{txn.transaction_id}</td>
+                  <td><strong>{txn.first_name} {txn.last_name}</strong></td>
+                  <td><small>{txn.type_display || txn.transaction_type}</small></td>
+                  <td><strong className={txn.amount < 0 ? 'text-danger' : 'text-success'}>
+                    {txn.amount < 0 ? '-' : '+'}${Math.abs(txn.amount).toFixed(2)}
+                  </strong></td>
+                  <td className="text-secondary small">{txn.description || '-'}</td>
+                  <td className="hide-on-mobile small">{new Date(txn.created_at).toLocaleDateString()}</td>
                   <td className="action-buttons d-flex gap-2">
-                    <button className="btn btn-success btn-sm me-2" onClick={() => changeStatus(req.withdrawal_id, true)}>Approve</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => changeStatus(req.withdrawal_id, false)}>Decline</button>
+                    <button 
+                      className="btn btn-success btn-sm me-2" 
+                      onClick={() => approveTransaction(txn.transaction_id)}
+                      disabled={actionInProgress === txn.transaction_id}
+                    >
+                      {actionInProgress === txn.transaction_id ? 'Processing...' : 'Approve'}
+                    </button>
+                    <button 
+                      className="btn btn-danger btn-sm" 
+                      onClick={() => rejectTransaction(txn.transaction_id)}
+                      disabled={actionInProgress === txn.transaction_id}
+                    >
+                      {actionInProgress === txn.transaction_id ? 'Processing...' : 'Reject'}
+                    </button>
                   </td>
                 </tr>
               )) : (
-                <tr><td colSpan="6" className="text-center">No pending transfers</td></tr>
+                <tr><td colSpan="7" className="text-center">No pending transactions</td></tr>
               )}
             </tbody>
           </table>

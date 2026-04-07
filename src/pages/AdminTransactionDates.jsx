@@ -7,20 +7,21 @@ const AdminTransactionDates = () => {
   const [selected, setSelected] = useState(null)
   const [postingDate, setPostingDate] = useState('')
   const [valueDate, setValueDate] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loadingTxns, setLoadingTxns] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
   const loadTransactions = async () => {
     try {
-      setLoading(true)
+      setLoadingTxns(true)
       const resp = await axiosInstance.get('/transactions/all?limit=100')
       setTransactions(resp.data.data || [])
       setError('')
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load transactions')
     } finally {
-      setLoading(false)
+      setLoadingTxns(false)
     }
   }
 
@@ -28,10 +29,24 @@ const AdminTransactionDates = () => {
     loadTransactions()
   }, [])
 
+  // Format date from backend format to datetime-local format
+  const formatForInput = (dateStr) => {
+    if (!dateStr) return ''
+    // Convert '2026-03-01 12:00:00' to '2026-03-01T12:00'
+    return dateStr.replace(' ', 'T').slice(0, 16)
+  }
+
+  // Format date from datetime-local back to backend format
+  const formatForBackend = (dateStr) => {
+    if (!dateStr) return null
+    // Convert '2026-03-01T12:00' back to '2026-03-01 12:00:00'
+    return dateStr.replace('T', ' ') + ':00'
+  }
+
   const selectTransaction = (txn) => {
     setSelected(txn)
-    setPostingDate(txn.posting_date || '')
-    setValueDate(txn.value_date || '')
+    setPostingDate(formatForInput(txn.posting_date || txn.created_at))
+    setValueDate(formatForInput(txn.value_date || txn.created_at))
     setSuccess('')
     setError('')
   }
@@ -39,23 +54,31 @@ const AdminTransactionDates = () => {
   const submitUpdate = async () => {
     if (!selected) return
     try {
+      setSaving(true)
+      setError('')
+
       const payload = {
         transaction_id: selected.transaction_id,
-        posting_date: postingDate || null,
-        value_date: valueDate || null
+        posting_date: formatForBackend(postingDate),
+        value_date: formatForBackend(valueDate)
       }
 
       const resp = await axiosInstance.post('/admin/transactions/update-dates', payload)
       if (resp.data.success) {
-        setSuccess('Dates updated successfully')
+        setSuccess('Dates updated successfully!')
         setError('')
-        loadTransactions()
-        setSelected(null)
+        // Force full page reload to ensure all data is refreshed
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
       } else {
         setError(resp.data.message || 'Failed to update dates')
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Server error')
+      console.error('Update error:', err)
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -71,7 +94,7 @@ const AdminTransactionDates = () => {
 
       <div className="mb-4">
         <h5>Transaction list</h5>
-        {loading ? (
+        {loadingTxns ? (
           <div className="spinner-border text-warning" role="status"><span className="visually-hidden">Loading...</span></div>
         ) : (
           <div className="table-responsive-wrapper" style={{ maxHeight: '300px', overflowY: 'auto' }}>
@@ -92,7 +115,7 @@ const AdminTransactionDates = () => {
                     <td className="hide-on-mobile"><small>{txn.transaction_id}</small></td>
                     <td><small>{txn.first_name} {txn.last_name}</small></td>
                     <td><strong>${Number(txn.amount).toFixed(2)}</strong></td>
-                    <td className="hide-on-mobile"><small>{txn.transaction_type || txn.type}</small></td>
+                    <td className="hide-on-mobile"><small>{txn.type_display || txn.transaction_type || txn.type}</small></td>
                     <td><span className={`badge bg-${txn.status === 'completed' ? 'success' : 'warning'}`}>{txn.status}</span></td>
                     <td>
                       <button className="btn btn-sm btn-outline-light" onClick={() => selectTransaction(txn)}>Edit dates</button>
@@ -106,19 +129,46 @@ const AdminTransactionDates = () => {
       </div>
 
       {selected && (
-        <div className="card p-3 bg-dark border-secondary">
-          <h5>Edit transaction #{selected.transaction_id}</h5>
+        <div className="card p-4 bg-dark border-secondary">
+          <h5 className="mb-4">Edit transaction #{selected.transaction_id}</h5>
           <div className="row g-3 mb-3">
             <div className="col-md-6">
-              <label className="form-label">Posting Date (YYYY-MM-DD HH:MM:SS)</label>
-              <input className="form-control" value={postingDate} onChange={(e) => setPostingDate(e.target.value)} placeholder="2026-03-01 12:00:00" />
+              <label className="form-label">Posting Date</label>
+              <input 
+                type="datetime-local"
+                className="form-control"
+                value={postingDate} 
+                onChange={(e) => setPostingDate(e.target.value)}
+                style={{ colorScheme: 'dark' }}
+              />
             </div>
             <div className="col-md-6">
-              <label className="form-label">Value Date (YYYY-MM-DD HH:MM:SS)</label>
-              <input className="form-control" value={valueDate} onChange={(e) => setValueDate(e.target.value)} placeholder="2026-03-01 12:00:00" />
+              <label className="form-label">Value Date</label>
+              <input 
+                type="datetime-local"
+                className="form-control"
+                value={valueDate} 
+                onChange={(e) => setValueDate(e.target.value)}
+                style={{ colorScheme: 'dark' }}
+              />
             </div>
           </div>
-          <button className="btn btn-primary" onClick={submitUpdate}>Save date changes</button>
+          <div className="d-flex gap-2">
+            <button 
+              className="btn btn-primary flex-grow-1" 
+              onClick={submitUpdate}
+              disabled={saving}
+            >
+              {saving ? 'Saving...' : 'Save date changes'}
+            </button>
+            <button 
+              className="btn btn-secondary" 
+              onClick={() => setSelected(null)}
+              disabled={saving}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </DashboardLayout>
