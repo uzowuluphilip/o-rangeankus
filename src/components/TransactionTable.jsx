@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 /**
  * TransactionTable Component
@@ -8,9 +8,12 @@ import React from 'react'
  * - Responsive design
  * - Status badge coloring
  * - Pagination support
- * - Sortable columns
+ * - Sortable Date column
  */
 const TransactionTable = ({ transactions, loading, onPageChange, currentPage, totalPages }) => {
+  const [sortOrder, setSortOrder] = useState('desc')
+  // 'desc' = newest date at top (default)
+  // 'asc'  = oldest date at top
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -43,12 +46,26 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
     return badgeMap[type] || 'bg-secondary'
   }
 
+  // Sort transactions by date before rendering
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    const dateA = new Date(a.posting_date || a.created_at)
+    const dateB = new Date(b.posting_date || b.created_at)
+    return sortOrder === 'desc'
+      ? dateB - dateA // newest first
+      : dateA - dateB // oldest first
+  })
+
   return (
     <div className="table-responsive-wrapper">
       <table className="table table-dark table-hover align-middle">
         <thead>
           <tr>
-            <th>Date</th>
+            <th
+              onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
+              style={{ cursor: 'pointer', userSelect: 'none' }}
+            >
+              Date {sortOrder === 'desc' ? '↓' : '↑'}
+            </th>
             <th>Type</th>
             <th className="hide-on-mobile">Description</th>
             <th>Amount</th>
@@ -56,7 +73,7 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction, index) => (
+          {sortedTransactions.map((transaction, index) => (
             <tr key={transaction.id || transaction.transaction_id || `transaction-${index}`}>
               <td>{new Date(transaction.posting_date || transaction.created_at).toLocaleDateString('en-US', {
                 year: 'numeric',

@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { PinProvider } from './context/PinContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
 // Pages
@@ -82,7 +83,8 @@ const App = () => {
     <ThemeProvider>
       <Router>
         <AuthProvider>
-          <Routes>
+          <PinProvider>
+            <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -197,6 +199,7 @@ const App = () => {
             <Route path="/" element={<SmartRedirect />} />
             <Route path="*" element={<SmartRedirect />} />
           </Routes>
+          </PinProvider>
         </AuthProvider>
       </Router>
     </ThemeProvider>

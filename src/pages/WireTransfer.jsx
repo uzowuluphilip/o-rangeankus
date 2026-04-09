@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import TransactionReceiptModal from '../components/TransactionReceiptModal'
 import { useAuth } from '../context/AuthContext'
+import { usePinContext } from '../context/PinContext'
+import PinSetupModal from '../components/pin/PinSetupModal'
+import PinPromptModal from '../components/pin/PinPromptModal'
+import FrozenAccountModal from '../components/pin/FrozenAccountModal'
+import usePinFlow from '../hooks/usePinFlow'
 import { DollarSign, Lightbulb } from 'lucide-react'
 
 /**
@@ -13,13 +18,16 @@ import { DollarSign, Lightbulb } from 'lucide-react'
  * Features:
  * - Form for wire transfer details
  * - Recipient name, bank, account number, amount
- * - Validation
- * - POST /transfer/wire endpoint
- * - Success/error notifications
+ * - PIN security before transfer
+ * - Transaction receipt modal
+ * - Bootstrap + inline styling
  */
 const WireTransfer = () => {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const { checkPinStatus } = usePinContext()
+  const navigate = useNavigate()
+  
   const [formData, setFormData] = useState({
     recipientName: '',
     bank: '',
@@ -34,16 +42,7 @@ const WireTransfer = () => {
   const [loading, setLoading] = useState(false)
   const [showReceipt, setShowReceipt] = useState(false)
   const [receiptData, setReceiptData] = useState(null)
-  const navigate = useNavigate()
 
-  // Handle form field changes
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
 
   // Validate form inputs
   const validateForm = () => {
@@ -66,23 +65,8 @@ const WireTransfer = () => {
     return true
   }
 
-  React.useEffect(() => {
-    const loadBalance = async () => {
-      try {
-        const response = await axiosInstance.get('/transactions/balance')
-        const balanceData = response.data.data || response.data
-        setAccountBalance(parseFloat(balanceData.total_balance || 0))
-      } catch (err) {
-        console.error('[WireTransfer] Failed to fetch balance', err)
-      }
-    }
-
-    loadBalance()
-  }, [])
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  // Actual transfer submission - called after PIN verification
+  const submitTransfer = async () => {
     setError('')
     setSuccess('')
 
@@ -105,11 +89,9 @@ const WireTransfer = () => {
         purpose: formData.purpose
       })
 
-      // Debug: Log the full response structure
-      console.log('Full API response:', response.data)
-      console.log('Transaction data:', JSON.stringify(response.data, null, 2))
+      console.log('[WireTransfer] Transfer successful:', response.data)
 
-      // ✅ Set receipt data from the API response
+      // Set receipt data from the API response
       setReceiptData({
         id: response.data.transaction_id || response.data?.id,
         reference: response.data.reference_code || response.data?.reference,
@@ -123,7 +105,7 @@ const WireTransfer = () => {
         sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
         bank: formData.bank
       })
-      // ✅ Show the receipt modal immediately
+      // Show the receipt modal immediately
       setShowReceipt(true)
 
       // Reset form
@@ -137,10 +119,74 @@ const WireTransfer = () => {
       })
     } catch (err) {
       const message = err.response?.data?.message || t('wireTransfer.wireFailed')
+      console.error('[WireTransfer] Transfer failed:', err)
       setError(message)
     } finally {
       setLoading(false)
     }
+  }
+
+  // PIN flow management
+  const {
+    triggerTransaction,
+    showSetup,
+    setShowSetup,
+    showPrompt,
+    setShowPrompt,
+    showFrozen,
+    setShowFrozen,
+    handleSetupSuccess,
+    handlePinSuccess,
+    handleFrozen,
+  } = usePinFlow({
+    onTransactionApproved: submitTransfer,
+    onFrozen: () => {
+      console.log('[WireTransfer] Account frozen - logging out')
+      logout()
+      navigate('/login')
+    },
+  })
+
+  // Check PIN status on component mount
+  useEffect(() => {
+    const checkPin = async () => {
+      try {
+        await checkPinStatus()
+      } catch (err) {
+        console.error('[WireTransfer] Failed to check PIN status:', err)
+      }
+    }
+    checkPin()
+  }, [checkPinStatus])
+
+  // Load account balance
+  useEffect(() => {
+    const loadBalance = async () => {
+      try {
+        const response = await axiosInstance.get('/transactions/balance')
+        const balanceData = response.data.data || response.data
+        setAccountBalance(parseFloat(balanceData.total_balance || 0))
+      } catch (err) {
+        console.error('[WireTransfer] Failed to fetch balance', err)
+      }
+    }
+
+    loadBalance()
+  }, [])
+
+  // Handle form field changes
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // Form submission - triggers PIN flow
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    triggerTransaction()
   }
 
   return (
@@ -262,6 +308,10 @@ const WireTransfer = () => {
                       value={formData.amount}
                       onChange={handleChange}
                       disabled={loading}
+                      style={{
+                        MozAppearance: 'textfield',
+                        appearance: 'textfield'
+                      }}
                     />
                   </div>
                 </div>
@@ -353,6 +403,37 @@ const WireTransfer = () => {
           }}
         />
       )}
+
+      {/* PIN Setup Modal - First time PIN creation */}
+      <PinSetupModal
+        isOpen={showSetup}
+        onClose={() => setShowSetup(false)}
+        onSuccess={handleSetupSuccess}
+      />
+
+      {/* PIN Prompt Modal - Verify PIN before each transaction */}
+      <PinPromptModal
+        isOpen={showPrompt}
+        onClose={() => setShowPrompt(false)}
+        onSuccess={handlePinSuccess}
+        onFrozen={handleFrozen}
+        transactionDetails={{
+          recipient: formData.recipientName,
+          amount: `$${parseFloat(formData.amount).toFixed(2)}`,
+        }}
+      />
+
+      {/* Frozen Account Modal - Account locked after failed attempts */}
+      <FrozenAccountModal
+        isOpen={showFrozen}
+        onLogout={() => {
+          setShowFrozen(false)
+          logout()
+          navigate('/login')
+        }}
+      />
+
+
     </DashboardLayout>
   )
 }

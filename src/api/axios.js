@@ -40,15 +40,29 @@ axiosInstance.interceptors.request.use(
 /**
  * Response Interceptor
  * Handles global errors like 401 (Unauthorized)
+ * ✅ Does NOT logout on PIN errors or frozen account warnings
  */
 axiosInstance.interceptors.response.use(
   (response) => {
     return response
   },
   (error) => {
-    // Handle 401 Unauthorized - token expired or invalid
-    if (error.response?.status === 401) {
-      // Clear local storage and redirect to login
+    const status = error.response?.status
+    const isPinError = error.response?.data?.pin_error === true
+    const isFrozenWarning = error.response?.data?.is_frozen === true
+    const url = error.config?.url || ''
+    
+    // Check if this is a PIN-related endpoint
+    const isPinEndpoint = 
+      url.includes('/pin/verify') ||
+      url.includes('/pin/set') ||
+      url.includes('/pin/check') ||
+      url.includes('/pin/reset')
+
+    // ✅ Only logout on REAL authentication failures
+    // NOT on wrong PIN (pin_error=true), frozen account (is_frozen=true), or PIN endpoints
+    if (status === 401 && !isPinError && !isFrozenWarning && !isPinEndpoint) {
+      // Real auth failure - token expired or invalid
       localStorage.removeItem('authToken')
       localStorage.removeItem('authUser')
       window.location.href = '/login'

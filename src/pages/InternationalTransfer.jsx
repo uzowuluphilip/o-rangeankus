@@ -5,6 +5,11 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import TransactionReceiptModal from '../components/TransactionReceiptModal'
 import { useAuth } from '../context/AuthContext'
+import { usePinContext } from '../context/PinContext'
+import PinSetupModal from '../components/pin/PinSetupModal'
+import PinPromptModal from '../components/pin/PinPromptModal'
+import FrozenAccountModal from '../components/pin/FrozenAccountModal'
+import usePinFlow from '../hooks/usePinFlow'
 import { Globe, Lightbulb, Clock } from 'lucide-react'
 
 /**
@@ -15,11 +20,15 @@ import { Globe, Lightbulb, Clock } from 'lucide-react'
  * - Currency selector
  * - Real-time exchange rate preview
  * - Dynamic amount conversion
- * - POST /transfer/international endpoint
+ * - PIN security before transfer
+ * - Transaction receipt modal
  */
 const InternationalTransfer = () => {
   const { t } = useTranslation()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const { checkPinStatus } = usePinContext()
+  const navigate = useNavigate()
+  
   const [formData, setFormData] = useState({
     recipientName: '',
     country: '',
@@ -36,7 +45,140 @@ const InternationalTransfer = () => {
   const [loading, setLoading] = useState(false)
   const [showReceipt, setShowReceipt] = useState(false)
   const [receiptData, setReceiptData] = useState(null)
-  const navigate = useNavigate()
+  const [accountBalance, setAccountBalance] = useState(0)
+
+  // Validate form inputs
+  const validateForm = () => {
+    if (!formData.recipientName.trim()) {
+      setError(t('internationalTransfer.recipientNameRequired'))
+      return false
+    }
+    if (!formData.country.trim()) {
+      setError(t('internationalTransfer.countryRequired'))
+      return false
+    }
+    if (!formData.accountNumber.trim()) {
+      setError(t('internationalTransfer.accountNumberRequired'))
+      return false
+    }
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      setError(t('internationalTransfer.validAmountRequired'))
+      return false
+    }
+    return true
+  }
+
+  // Actual transfer submission - called after PIN verification
+  const submitTransfer = async () => {
+    setError('')
+    setSuccess('')
+
+    if (!validateForm()) return
+
+    if (parseFloat(formData.amount) > accountBalance) {
+      setError(t('internationalTransfer.insufficientBalance'))
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await axiosInstance.post('/transactions/simulate', {
+        type: 'international',
+        recipient_name: formData.recipientName,
+        country: formData.country,
+        account_number: formData.accountNumber,
+        swift_code: formData.swiftCode,
+        currency: formData.currency,
+        amount: parseFloat(formData.amount),
+        purpose: formData.purpose
+      })
+
+      console.log('[InternationalTransfer] Transfer successful:', response.data)
+
+      // Set receipt data from the API response
+      setReceiptData({
+        id: response.data.transaction_id || response.data?.id,
+        reference: response.data.reference_code || response.data?.reference,
+        type: response.data.type || 'International Transfer',
+        amount: response.data.amount || formData.amount,
+        recipient: formData.recipientName,
+        description: formData.purpose || 'International Transfer',
+        status: response.data.status || 'completed',
+        posting_date: response.data.posting_date || new Date().toISOString(),
+        value_date: response.data.value_date || new Date().toISOString(),
+        sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
+        country: formData.country,
+        currency: formData.currency
+      })
+      // Show the receipt modal immediately
+      setShowReceipt(true)
+
+      // Reset form
+      setFormData({
+        recipientName: '',
+        country: '',
+        accountNumber: '',
+        swiftCode: '',
+        currency: 'EUR',
+        amount: '',
+        purpose: ''
+      })
+    } catch (err) {
+      const message = err.response?.data?.message || t('internationalTransfer.transferFailed')
+      console.error('[InternationalTransfer] Transfer failed:', err)
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // PIN flow management
+  const {
+    triggerTransaction,
+    showSetup,
+    setShowSetup,
+    showPrompt,
+    setShowPrompt,
+    showFrozen,
+    setShowFrozen,
+    handleSetupSuccess,
+    handlePinSuccess,
+    handleFrozen,
+  } = usePinFlow({
+    onTransactionApproved: submitTransfer,
+    onFrozen: () => {
+      console.log('[InternationalTransfer] Account frozen - logging out')
+      logout()
+      navigate('/login')
+    },
+  })
+
+  // Check PIN status on component mount
+  useEffect(() => {
+    const checkPin = async () => {
+      try {
+        await checkPinStatus()
+      } catch (err) {
+        console.error('[InternationalTransfer] Failed to check PIN status:', err)
+      }
+    }
+    checkPin()
+  }, [checkPinStatus])
+
+  // Load account balance
+  useEffect(() => {
+    const loadBalance = async () => {
+      try {
+        const response = await axiosInstance.get('/transactions/balance')
+        const balanceData = response.data.data || response.data
+        setAccountBalance(parseFloat(balanceData.total_balance || 0))
+      } catch (err) {
+        console.error('[InternationalTransfer] Failed to fetch balance', err)
+      }
+    }
+
+    loadBalance()
+  }, [])
 
   // Supported currencies with exchange rates (mock data - replace with real API)
   const currencies = {
@@ -73,91 +215,10 @@ const InternationalTransfer = () => {
     }
   }
 
-  // Validate form inputs
-  const validateForm = () => {
-    if (!formData.recipientName.trim()) {
-      setError(t('internationalTransfer.recipientNameRequired'))
-      return false
-    }
-    if (!formData.country.trim()) {
-      setError(t('internationalTransfer.countryRequired'))
-      return false
-    }
-    if (!formData.accountNumber.trim()) {
-      setError(t('internationalTransfer.accountNumberRequired'))
-      return false
-    }
-    if (!formData.swiftCode.trim()) {
-      setError(t('internationalTransfer.swiftCodeRequired'))
-      return false
-    }
-    if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      setError(t('internationalTransfer.validAmountRequired'))
-      return false
-    }
-    return true
-  }
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
+  // Form submission - triggers PIN flow
+  const handleSubmit = (e) => {
     e.preventDefault()
-    setError('')
-    setSuccess('')
-
-    if (!validateForm()) return
-
-    setLoading(true)
-    try {
-      const response = await axiosInstance.post('/transactions/simulate', {
-        type: 'international',
-        recipient_name: formData.recipientName,
-        country: formData.country,
-        account_number: formData.accountNumber,
-        swift_code: formData.swiftCode,
-        currency: formData.currency,
-        amount: parseFloat(formData.amount),
-        purpose: formData.purpose
-      })
-
-      // Debug: Log the full response structure
-      console.log('Full API response:', response.data)
-      console.log('Transaction data:', JSON.stringify(response.data, null, 2))
-
-      // ✅ Set receipt data from the API response
-      setReceiptData({
-        id: response.data.transaction_id || response.data?.id,
-        reference: response.data.reference_code || response.data?.reference,
-        type: response.data.type || 'International Transfer',
-        amount: response.data.amount || formData.amount,
-        recipient: formData.recipientName,
-        description: formData.purpose || 'International Transfer',
-        status: response.data.status || 'completed',
-        posting_date: response.data.posting_date || new Date().toISOString(),
-        value_date: response.data.value_date || new Date().toISOString(),
-        sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
-        country: formData.country,
-        currency: formData.currency,
-        swiftCode: formData.swiftCode
-      })
-      // ✅ Show the receipt modal immediately
-      setShowReceipt(true)
-
-      // Reset form
-      setFormData({
-        recipientName: '',
-        country: '',
-        accountNumber: '',
-        swiftCode: '',
-        currency: 'EUR',
-        amount: '',
-        purpose: ''
-      })
-    } catch (err) {
-      const message = err.response?.data?.message || t('internationalTransfer.transferFailed')
-      setError(message)
-    } finally {
-      setLoading(false)
-    }
+    triggerTransaction()
   }
 
   return (
@@ -303,6 +364,10 @@ const InternationalTransfer = () => {
                         value={formData.amount}
                         onChange={handleChange}
                         disabled={loading}
+                        style={{
+                          MozAppearance: 'textfield',
+                          appearance: 'textfield'
+                        }}
                       />
                     </div>
                   </div>
@@ -416,6 +481,35 @@ const InternationalTransfer = () => {
           }}
         />
       )}
+
+      {/* PIN Setup Modal - First time PIN creation */}
+      <PinSetupModal
+        isOpen={showSetup}
+        onClose={() => setShowSetup(false)}
+        onSuccess={handleSetupSuccess}
+      />
+
+      {/* PIN Prompt Modal - Verify PIN before each transaction */}
+      <PinPromptModal
+        isOpen={showPrompt}
+        onClose={() => setShowPrompt(false)}
+        onSuccess={handlePinSuccess}
+        onFrozen={handleFrozen}
+        transactionDetails={{
+          recipient: formData.recipientName,
+          amount: `${formData.currency} ${parseFloat(formData.amount).toFixed(2)} ($${parseFloat(convertedAmount).toFixed(2)})`,
+        }}
+      />
+
+      {/* Frozen Account Modal - Account locked after failed attempts */}
+      <FrozenAccountModal
+        isOpen={showFrozen}
+        onLogout={() => {
+          setShowFrozen(false)
+          logout()
+          navigate('/login')
+        }}
+      />
     </DashboardLayout>
   )
 }

@@ -250,6 +250,10 @@ const AdminBalance = () => {
                         value={newBalance}
                         onChange={(e) => setNewBalance(e.target.value)}
                         disabled={loading}
+                        style={{
+                          MozAppearance: 'textfield',
+                          appearance: 'textfield'
+                        }}
                       />
                     </div>
                     <small className="text-muted d-block mt-2">
