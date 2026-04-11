@@ -1,15 +1,24 @@
 .navbar-custom {
   background-color: var(--surface-color);
   border-bottom: 1px solid var(--border-color);
-  padding: 0.75rem 0;
+  padding: 0.75rem 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   width: 100%;
   position: relative;
   z-index: 99;
+}
+
+.navbar-custom > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 50px;
 }
 
 .navbar-custom .container-fluid {
@@ -69,21 +78,22 @@
 
 /* Desktop controls */
 .navbar-desktop-controls {
-  display: none;
+  display: flex !important;
   align-items: center;
   gap: 1rem;
   margin-left: auto;
+  flex-shrink: 0;
 }
 
-@media (min-width: 992px) {
+@media (max-width: 991px) {
   .navbar-desktop-controls {
-    display: flex !important;
+    display: none !important;
   }
 }
 
 /* Mobile section */
 .navbar-mobile {
-  display: flex;
+  display: flex !important;
   align-items: center;
   gap: 0.5rem;
   margin-left: auto;
@@ -100,7 +110,7 @@
 
 /* Mobile toggle button */
 .navbar-mobile-toggle {
-  display: none;
+  display: inline-flex !important;
   background: none;
   border: none;
   color: var(--text-primary);
@@ -118,32 +128,35 @@
   color: var(--primary-color);
 }
 
-@media (max-width: 991px) {
+@media (min-width: 992px) {
   .navbar-mobile-toggle {
-    display: flex !important;
+    display: none !important;
   }
 }
 
 /* Mobile menu - full width dropdown */
 .navbar-mobile-menu {
   display: none;
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  right: 0;
+  position: static;
   width: 100%;
   background-color: var(--surface-color);
   border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
   flex-direction: column;
   padding: 0;
   gap: 0;
   z-index: 100;
   overflow: hidden;
+  margin-top: 0.75rem;
 }
 
 .navbar-mobile-menu.open {
   display: flex;
+}
+
+@media (min-width: 992px) {
+  .navbar-mobile-menu {
+    display: none !important;
+  }
 }
 
 .mobile-menu-link {
