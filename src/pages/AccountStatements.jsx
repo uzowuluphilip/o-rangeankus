@@ -48,18 +48,24 @@ const AccountStatements = () => {
         { responseType: 'blob' }
       )
 
-      // Create blob URL and trigger download
+      // Create blob URL and trigger download (as .html file)
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', `statement-${statementId}.pdf`)
+      link.setAttribute('download', `statement-${statementId}.html`)
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
+      
+      // Clean up after a delay
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url)
+      }, 1000)
+      
+      setDownloadingId(null)
     } catch (err) {
+      console.error('Failed to download statement:', err)
       setError(t('accountStatements.downloadFailed'))
-    } finally {
       setDownloadingId(null)
     }
   }
@@ -138,7 +144,7 @@ const AccountStatements = () => {
                     </div>
                   </div>
 
-                  {/* Download button */}
+                  {/* Download statement button */}
                   <button
                     className="btn btn-primary w-100 py-2"
                     onClick={() => handleDownloadStatement(statement.statement_id)}
@@ -150,7 +156,7 @@ const AccountStatements = () => {
                         {t('accountStatements.downloading')}
                       </>
                     ) : (
-                      <><Download size={16} className="me-2" style={{display: 'inline-block'}} />Download PDF</>
+                      <><Download size={16} className="me-2" style={{display: 'inline-block'}} />Download Statement</>
                     )}
                   </button>
                 </div>

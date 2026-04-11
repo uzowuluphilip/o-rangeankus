@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '../context/AuthContext'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { ArrowDownToLine, Sparkles, Lock, HelpCircle } from 'lucide-react'
@@ -8,87 +9,118 @@ import { ArrowDownToLine, Sparkles, Lock, HelpCircle } from 'lucide-react'
  * Direct Deposit Setup Page
  * 
  * Features:
- * - Display routing number
- * - Display account number
+ * - Display unique routing number per user
+ * - Display user's real 12-digit account number
  * - Download PDF button
  * - Shareable bank details
  */
+
+// Helper function to generate routing number from user ID if not provided
+const generateRoutingNumber = (userId) => {
+  if (!userId) return 'Loading...'
+  return '02' + String(userId).padStart(8, '0')
+}
+
 const DirectDeposit = () => {
   const { t } = useTranslation()
-  const [directDepositData, setDirectDepositData] = useState(null)
-  const [formData, setFormData] = useState({
-    routing_number: '',
-    account_number: '',
-    account_type: 'Checking',
-    bank_name: 'Orange Bank'
-  })
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [copied, setCopied] = useState(null)
-
-  // Fetch direct deposit information
+  const { user } = useAuth()
+  
+  // Debug: Log user data to console
   useEffect(() => {
-    const fetchDirectDepositInfo = async () => {
-      try {
-        setLoading(true)
-        const response = await axiosInstance.get('/account/direct-deposit')
-        const data = response.data.data || response.data
-        setDirectDepositData(data)
-        setFormData({
-          routing_number: data.routing_number || '',
-          account_number: data.account_number || '',
-          account_type: data.account_type || 'Checking',
-          bank_name: data.bank_name || 'Orange Bank'
-        })
-      } catch (err) {
-        const message = err.response?.data?.message || t('directDeposit.failed')
-        setError(message)
-      } finally {
-        setLoading(false)
-      }
+    console.log('[DirectDeposit] User data:', user)
+    if (user) {
+      console.log('[DirectDeposit] routing_number from context:', user.routing_number)
+      console.log('[DirectDeposit] account_number:', user.account_number)
+      console.log('[DirectDeposit] user_id:', user.user_id)
+      
+      // If routing_number is not in context, generate it from user_id
+      const finalRoutingNumber = user.routing_number || generateRoutingNumber(user.user_id)
+      console.log('[DirectDeposit] final routing_number:', finalRoutingNumber)
     }
+  }, [user])
+  
+  const [formData, setFormData] = useState({
+    routing_number: user?.routing_number || generateRoutingNumber(user?.user_id) || 'Loading...',
+    account_number: user?.account_number || 'Loading...',
+    account_type: 'Checking',
+    bank_name: 'O-rangeankus Bank & Trust'
+  })
+  
+  const [copiedRouting, setCopiedRouting] = useState(false)
+  const [copiedAccount, setCopiedAccount] = useState(false)
+  const [error, setError] = useState('')
 
-    fetchDirectDepositInfo()
-  }, [])
+  // Update form when user data loads
+  useEffect(() => {
+    if (user?.account_number || user?.user_id) {
+      const routingNum = user?.routing_number || generateRoutingNumber(user?.user_id)
+      setFormData(prev => ({
+        ...prev,
+        account_number: user?.account_number || prev.account_number,
+        routing_number: routingNum
+      }))
+    }
+  }, [user?.account_number, user?.routing_number, user?.user_id])
 
-  // Handle copy to clipboard
-  const handleCopy = (text, fieldName) => {
-    navigator.clipboard.writeText(text)
-    setCopied(fieldName)
-    setTimeout(() => setCopied(null), 2000)
+  // Handle copy routing number to clipboard
+  const copyRouting = () => {
+    const routingNum = user?.routing_number || generateRoutingNumber(user?.user_id) || ''
+    navigator.clipboard.writeText(routingNum)
+    setCopiedRouting(true)
+    setTimeout(() => setCopiedRouting(false), 2000)
+  }
+
+  // Handle copy account number to clipboard
+  const copyAccount = () => {
+    navigator.clipboard.writeText(user?.account_number || '')
+    setCopiedAccount(true)
+    setTimeout(() => setCopiedAccount(false), 2000)
   }
 
   // Handle PDF download
   const handleDownloadPDF = async () => {
     try {
+      console.log('[DirectDeposit] Starting PDF download...')
       const response = await axiosInstance.get('/account/direct-deposit/pdf', {
         responseType: 'blob'
       })
       
-      // Create blob URL and trigger download
-      const url = window.URL.createObjectURL(new Blob([response.data]))
+      console.log('[DirectDeposit] Response status:', response.status)
+      console.log('[DirectDeposit] Response type:', response.type)
+      console.log('[DirectDeposit] Response data type:', typeof response.data)
+      console.log('[DirectDeposit] Response data:', response.data)
+      
+      // Check if response is an error JSON instead of blob
+      if (response.data.type === 'application/json') {
+        console.error('[DirectDeposit] Received JSON error instead of HTML')
+        const text = await response.data.text()
+        const errorData = JSON.parse(text)
+        setError(`Error: ${errorData.message || 'Failed to generate form'}`)
+        return
+      }
+      
+      // response.data is already a Blob, don't wrap it again
+      const url = window.URL.createObjectURL(response.data)
+      console.log('[DirectDeposit] Created object URL:', url)
+      
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', 'direct-deposit-form.pdf')
+      link.setAttribute('download', 'direct-deposit-form.html')
       document.body.appendChild(link)
+      console.log('[DirectDeposit] Clicking download link...')
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
+      
+      console.log('[DirectDeposit] Download complete')
     } catch (err) {
-      setError(t('directDeposit.failedDownload'))
+      console.error('[DirectDeposit] Download error:', err)
+      console.error('[DirectDeposit] Error message:', err.message)
+      if (err.response) {
+        console.error('[DirectDeposit] Error response:', err.response)
+      }
+      setError(t('directDeposit.failedDownload') + ' - ' + (err.message || 'Unknown error'))
     }
-  }
-
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="d-flex justify-content-center align-items-center" style={{ height: '500px' }}>
-          <div className="spinner-border text-warning" role="status">
-            <span className="visually-hidden">{t('common.loading')}</span>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
   }
 
   return (
@@ -124,16 +156,21 @@ const DirectDeposit = () => {
                   <input
                     type="text"
                     className="form-control"
-                    value={formData.routing_number}
+                    value={user?.routing_number || generateRoutingNumber(user?.user_id) || 'Loading...'}
+                    disabled
                     placeholder="N/A"
-                    onChange={(e) => setFormData(prev => ({ ...prev, routing_number: e.target.value }))}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#000',
+                      colorScheme: 'light dark'
+                    }}
                   />
                   <button
                     className="btn btn-outline-primary"
                     type="button"
-                    onClick={() => handleCopy(formData.routing_number, 'routing')}
+                    onClick={copyRouting}
                   >
-                    {copied === 'routing' ? `✓ ${t('directDeposit.copied')}` : t('directDeposit.copy')}
+                    {copiedRouting ? `✓ ${t('directDeposit.copied')}` : t('directDeposit.copy')}
                   </button>
                 </div>
               </div>
@@ -145,16 +182,21 @@ const DirectDeposit = () => {
                   <input
                     type="text"
                     className="form-control"
-                    value={formData.account_number}
+                    value={user?.account_number || 'Loading...'}
+                    disabled
                     placeholder="N/A"
-                    onChange={(e) => setFormData(prev => ({ ...prev, account_number: e.target.value }))}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#000',
+                      colorScheme: 'light dark'
+                    }}
                   />
                   <button
                     className="btn btn-outline-primary"
                     type="button"
-                    onClick={() => handleCopy(formData.account_number, 'account')}
+                    onClick={copyAccount}
                   >
-                    {copied === 'account' ? `✓ ${t('directDeposit.copied')}` : t('directDeposit.copy')}
+                    {copiedAccount ? `✓ ${t('directDeposit.copied')}` : t('directDeposit.copy')}
                   </button>
                 </div>
               </div>
@@ -165,9 +207,14 @@ const DirectDeposit = () => {
                 <input
                   type="text"
                   className="form-control"
-                  value={formData.account_type}
+                  value="Checking"
+                  disabled
                   placeholder="Checking"
-                  onChange={(e) => setFormData(prev => ({ ...prev, account_type: e.target.value }))}
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#000',
+                    colorScheme: 'light dark'
+                  }}
                 />
               </div>
 
@@ -177,9 +224,14 @@ const DirectDeposit = () => {
                 <input
                   type="text"
                   className="form-control"
-                  value={formData.bank_name}
-                  placeholder="Orange Bank"
-                  onChange={(e) => setFormData(prev => ({ ...prev, bank_name: e.target.value }))}
+                  value="O-rangeankus Bank & Trust"
+                  disabled
+                  placeholder="O-rangeankus Bank & Trust"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#000',
+                    colorScheme: 'light dark'
+                  }}
                 />
               </div>
 
