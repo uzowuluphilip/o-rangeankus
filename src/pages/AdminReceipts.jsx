@@ -253,7 +253,7 @@ const ReceiptModal = ({ transaction, onClose, onDownload }) => {
             onMouseOver={e => e.currentTarget.style.background = '#e55a00'}
             onMouseOut={e => e.currentTarget.style.background = '#FF6B00'}
           >
-            📄 Download PDF
+            � Download
           </button>
         </div>
 
@@ -292,35 +292,49 @@ const AdminReceipts = () => {
 
   const downloadReceipt = async (transactionId) => {
     try {
-      console.log('Downloading PDF for transaction ID:', transactionId)
+      console.log('[AdminReceipts] Downloading receipt for transaction ID:', transactionId)
       
       if (!transactionId) {
         alert('Transaction ID is missing')
         return
       }
 
-      // Use axios to fetch the PDF blob
+      // Fetch receipt as HTML text (backend now returns HTML instead of PDF)
       const response = await axiosInstance.get(
         `/transactions/receipt?id=${transactionId}`,
         { responseType: 'blob' }
       )
 
-      console.log('Receipt response received, size:', response.data.size)
+      console.log('[AdminReceipts] Receipt response received, size:', response.data.size)
 
-      // Create download link from blob
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `receipt-${transactionId}.pdf`)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url)
-
-      console.log('PDF download completed')
+      try {
+        // Create blob from the response
+        const blob = new Blob([response.data], { type: 'text/html' })
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `receipt-${transactionId}.html`)
+        
+        // Append, click, and remove
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        // Clean up
+        window.URL.revokeObjectURL(url)
+        
+        console.log('[AdminReceipts] HTML download completed successfully')
+      } catch (downloadError) {
+        console.error('[AdminReceipts] Download error:', downloadError)
+        // Fallback: open in new window
+        const url = window.URL.createObjectURL(response.data)
+        window.open(url, '_blank')
+      }
     } catch (err) {
-      console.error('PDF download error:', err)
-      console.error('Error response:', err.response?.data)
+      console.error('[AdminReceipts] Receipt fetch error:', err)
+      console.error('[AdminReceipts] Error response:', err.response?.data)
       alert('Failed to download receipt. The receipt may not be available yet.')
     }
   }
@@ -339,7 +353,7 @@ const AdminReceipts = () => {
     <DashboardLayout>
       <div className="mb-5">
         <h1 className="h3 text-primary-text mb-2">Admin Receipt Export</h1>
-        <p className="text-secondary">Download PDF receipts for any transaction.</p>
+        <p className="text-secondary">Download receipts for any transaction. Files open in your browser and can be saved/printed as PDF.</p>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
@@ -392,7 +406,7 @@ const AdminReceipts = () => {
                         👁️ View
                       </button>
 
-                      {/* Download PDF Button */}
+                      {/* Download Receipt Button */}
                       <button
                         onClick={() => downloadReceipt(txn.transaction_id)}
                         style={{
@@ -416,7 +430,7 @@ const AdminReceipts = () => {
                           e.currentTarget.style.borderColor = '#4da6ff'
                         }}
                       >
-                        📄 PDF
+                        � Download
                       </button>
                     </div>
                   </td>
