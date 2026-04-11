@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import TransactionTable from '../components/TransactionTable'
+import ProfileModal from '../components/profile/ProfileModal'
 import axiosInstance from '../api/axios'
 import { useAuth } from '../context/AuthContext'
 import {
@@ -15,6 +16,37 @@ import {
   Inbox
 } from 'lucide-react'
 import './Dashboard.css'
+
+/**
+ * Helper function to build profile picture URL from filename
+ */
+const buildProfileUrl = (pic) => {
+  if (!pic) return null
+  
+  let value = String(pic).trim()
+  
+  // Remove protocol (http://, https://)
+  let filename = value.replace(/^https?:\/\//, '')
+  
+  // Remove known domains that might be stuck to filename
+  filename = filename.replace(/^(api\.)?orangeankus\.com/i, '')
+  filename = filename.replace(/^localhost(:\d+)?/i, '')
+  
+  // If still has /profiles/ path, extract after it
+  if (filename.includes('profiles/')) {
+    filename = filename.split('profiles/')[1] || filename
+  }
+  
+  // Remove any remaining slashes and query strings
+  filename = filename.split('/').pop().split('?')[0]
+  
+  // Validate
+  if (!filename || filename === 'null' || filename === 'undefined') {
+    return null
+  }
+  
+  return `https://api.orangeankus.com/uploads/profiles/${filename}`
+}
 
 /**
  * Dashboard Page
@@ -34,9 +66,17 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
+  const [imgFailed, setImgFailed] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, updateProfilePicture } = useAuth()
   const { t } = useTranslation()
+
+  // Reset imgFailed whenever user's profile picture changes
+  useEffect(() => {
+    setImgFailed(false)
+    console.log('[Dashboard] Reset imgFailed, user profile_picture:', user?.profile_picture)
+  }, [user?.profile_picture])
 
   // Fetch dashboard data
   useEffect(() => {
@@ -115,9 +155,61 @@ const Dashboard = () => {
       <div className="dashboard-container">
         {/* Page header */}
         <div className="dashboard-header">
-          <div>
-            <h1 className="dashboard-title">{t('dashboard.welcome', { name: user?.first_name || t('common.user') })}</h1>
-            <p className="dashboard-subtitle">{t('dashboard.manageFinances')}</p>
+          <div style={{display: 'flex', alignItems: 'center', gap: '30px'}}>
+            <div>
+              <h1 className="dashboard-title">{t('dashboard.welcome', { name: user?.first_name || t('common.user') })}</h1>
+              <p className="dashboard-subtitle">{t('dashboard.manageFinances')}</p>
+            </div>
+            
+            {/* Profile picture - Round Avatar with fallback to initials */}
+            <div
+              onClick={() => setShowProfile(true)}
+              title="Click to update profile picture"
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                border: '3px solid #FF6600',
+                background: 'rgba(255, 102, 0, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 12px rgba(255, 102, 0, 0.2)',
+                flexShrink: 0,
+                cursor: 'pointer',
+                transition: 'transform 0.2s',
+                overflow: 'hidden',
+                position: 'relative'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              {user?.profile_picture && !imgFailed ? (
+                <img 
+                  src={buildProfileUrl(user.profile_picture)} 
+                  alt={`${user.first_name}'s profile`}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center'
+                  }}
+                  onError={() => {
+                    console.log('[Dashboard] Profile picture failed to load')
+                    setImgFailed(true)
+                  }}
+                />
+              ) : (
+                <span style={{
+                  color: '#FF6600',
+                  fontSize: '32px',
+                  fontWeight: 'bold',
+                  userSelect: 'none'
+                }}>
+                  {user?.first_name?.charAt(0).toUpperCase() || 'U'}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -287,6 +379,23 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Profile Picture Modal */}
+      <ProfileModal
+        isOpen={showProfile}
+        onClose={() => setShowProfile(false)}
+        user={user}
+        onUpdated={(pictureData) => {
+          // Handle both uploads (string URL) and removals (null)
+          console.log('[Dashboard] onUpdated called with:', pictureData)
+          updateProfilePicture(pictureData)
+          
+          // Reset imgFailed state for removals to show initials
+          if (pictureData === null) {
+            setImgFailed(false)
+          }
+        }}
+      />
     </DashboardLayout>
   )
 }

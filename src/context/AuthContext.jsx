@@ -39,7 +39,12 @@ export const AuthProvider = ({ children }) => {
             const parsedUser = JSON.parse(storedUser)
             // Ensure profile_picture URL is full
             if (parsedUser.profile_picture) {
-              parsedUser.profile_picture = getFullProfilePictureUrl(parsedUser.profile_picture)
+              // If it's just a filename (no slashes), construct the full path
+              if (!parsedUser.profile_picture.includes('/') && parsedUser.profile_picture.includes('user_')) {
+                parsedUser.profile_picture = getFullProfilePictureUrl(`/uploads/profiles/${parsedUser.profile_picture}`)
+              } else {
+                parsedUser.profile_picture = getFullProfilePictureUrl(parsedUser.profile_picture)
+              }
             }
             setToken(storedToken)
             setUser(parsedUser)
@@ -62,7 +67,20 @@ export const AuthProvider = ({ children }) => {
 
   // Update profile picture in state
   const updateProfilePicture = (url) => {
-    const fullUrl = getFullProfilePictureUrl(url)
+    // Handle null (removal), relative paths, and full URLs
+    let fullUrl = url
+    
+    if (url === null || url === undefined) {
+      fullUrl = null
+    } else if (typeof url === 'string') {
+      // If it's just a filename (no slashes), construct the full path
+      if (!url.includes('/') && url.includes('user_')) {
+        fullUrl = getFullProfilePictureUrl(`/uploads/profiles/${url}`)
+      } else {
+        fullUrl = getFullProfilePictureUrl(url)
+      }
+    }
+    
     setUser(prev => ({ 
       ...prev, 
       profile_picture: fullUrl

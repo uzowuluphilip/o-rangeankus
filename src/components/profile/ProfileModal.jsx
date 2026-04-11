@@ -118,6 +118,46 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdated }) {
     }
   }
 
+  const handleRemove = async () => {
+    if (!confirm('Are you sure you want to remove your profile picture?')) {
+      return
+    }
+    
+    setLoading(true)
+    setError('')
+    setSuccess('')
+    
+    try {
+      console.log('[ProfileModal] Removing profile picture...')
+      
+      const res = await axiosInstance.delete('/profile/picture')
+      
+      console.log('[ProfileModal] Remove response:', res.data)
+      
+      if (res.data.success) {
+        // ✅ Update localStorage to remove profile picture
+        const currentUser = JSON.parse(localStorage.getItem('authUser') || '{}')
+        currentUser.profile_picture = null
+        localStorage.setItem('authUser', JSON.stringify(currentUser))
+        console.log('[ProfileModal] Removed from localStorage')
+        
+        // ✅ Notify parent - pass null to clear the picture
+        onUpdated?.(null)
+        setSuccess('Profile picture removed!')
+        
+        // Close modal after short delay to show success message
+        setTimeout(() => {
+          onClose()
+        }, 1000)
+      }
+    } catch (err) {
+      console.error('[ProfileModal] Remove error:', err)
+      setError(err.response?.data?.message || 'Failed to remove picture. Try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div style={{
       position: 'fixed', 
@@ -259,6 +299,28 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdated }) {
             }}
           >
             {loading ? 'Uploading...' : 'Save picture'}
+          </button>
+        )}
+
+        {existingProfileUrl && (
+          <button
+            onClick={handleRemove}
+            disabled={loading}
+            style={{
+              width: '100%', 
+              padding: '12px', 
+              borderRadius: 8,
+              background: 'transparent', 
+              color: '#FF4444', 
+              border: '1px solid #FF4444',
+              fontSize: 14, 
+              fontWeight: 500, 
+              cursor: 'pointer',
+              marginBottom: '0.75rem',
+              opacity: loading ? 0.7 : 1
+            }}
+          >
+            {loading ? 'Removing...' : 'Remove picture'}
           </button>
         )}
 
