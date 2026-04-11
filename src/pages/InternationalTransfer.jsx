@@ -12,17 +12,33 @@ import FrozenAccountModal from '../components/pin/FrozenAccountModal'
 import usePinFlow from '../hooks/usePinFlow'
 import { Globe, Lightbulb, Clock } from 'lucide-react'
 
+// Custom list of supported countries
+const ALL_COUNTRIES = [
+  'Argentina', 'Australia', 'Belgium', 'Brazil',
+  'France', 'Germany',
+  'Indonesia', 'Ireland', 'Israel', 'Italy', 'Japan',
+  'Kuwait', 'Luxembourg',
+  'Netherlands', 'Norway', 'Portugal', 'Qatar',
+  'Russia', 'Saudi Arabia', 'Singapore', 'South Africa',
+  'South Korea', 'Spain', 'Switzerland', 'Turkey', 'Ukraine',
+  'United Arab Emirates', 'United Kingdom', 'United States',
+].sort()
+
 /**
  * International Transfer Page
  * 
  * Features:
  * - Recipient details form
+ * - Country selector (searchable dropdown)
  * - Currency selector
  * - Real-time exchange rate preview
  * - Dynamic amount conversion
+ * - $35 transaction fee
  * - PIN security before transfer
  * - Transaction receipt modal
  */
+const TRANSFER_FEE = 35
+
 const InternationalTransfer = () => {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
@@ -46,6 +62,8 @@ const InternationalTransfer = () => {
   const [showReceipt, setShowReceipt] = useState(false)
   const [receiptData, setReceiptData] = useState(null)
   const [accountBalance, setAccountBalance] = useState(0)
+  const [countrySearch, setCountrySearch] = useState('')
+  const [showDropdown, setShowDropdown] = useState(false)
 
   // Validate form inputs
   const validateForm = () => {
@@ -53,8 +71,8 @@ const InternationalTransfer = () => {
       setError(t('internationalTransfer.recipientNameRequired'))
       return false
     }
-    if (!formData.country.trim()) {
-      setError(t('internationalTransfer.countryRequired'))
+    if (!formData.country) {
+      setError(t('internationalTransfer.countryRequired') || 'Please select a country from the list')
       return false
     }
     if (!formData.accountNumber.trim()) {
@@ -75,8 +93,11 @@ const InternationalTransfer = () => {
 
     if (!validateForm()) return
 
-    if (parseFloat(formData.amount) > accountBalance) {
-      setError(t('internationalTransfer.insufficientBalance'))
+    const transferAmount = parseFloat(formData.amount)
+    const totalDeducted = transferAmount + TRANSFER_FEE
+
+    if (totalDeducted > accountBalance) {
+      setError(`Insufficient balance. You need $${totalDeducted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (including $${TRANSFER_FEE} fee)`)
       return
     }
 
@@ -89,7 +110,9 @@ const InternationalTransfer = () => {
         account_number: formData.accountNumber,
         swift_code: formData.swiftCode,
         currency: formData.currency,
-        amount: parseFloat(formData.amount),
+        amount: transferAmount,
+        fee: TRANSFER_FEE,
+        total_deducted: totalDeducted,
         purpose: formData.purpose
       })
 
@@ -101,11 +124,11 @@ const InternationalTransfer = () => {
         reference: response.data.reference_code || response.data?.reference,
         type: response.data.type || 'International Transfer',
         amount: response.data.amount || formData.amount,
+        fee: TRANSFER_FEE,
         recipient: formData.recipientName,
         description: formData.purpose || 'International Transfer',
         status: response.data.status || 'completed',
         posting_date: response.data.posting_date || new Date().toISOString(),
-        value_date: response.data.value_date || new Date().toISOString(),
         sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
         country: formData.country,
         currency: formData.currency
@@ -164,6 +187,13 @@ const InternationalTransfer = () => {
     }
     checkPin()
   }, [checkPinStatus])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setShowDropdown(false)
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [])
 
   // Load account balance
   useEffect(() => {
@@ -279,16 +309,91 @@ const InternationalTransfer = () => {
                   <label htmlFor="country" className="form-label text-primary-text">
                     {t('internationalTransfer.formLabels.country')} <span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="country"
-                    name="country"
-                    placeholder="e.g., France, United Kingdom"
-                    value={formData.country}
-                    onChange={handleChange}
-                    disabled={loading}
-                  />
+                  
+                  {/* Searchable Country Dropdown */}
+                  <div style={{ position: 'relative' }} onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="text"
+                      id="country"
+                      className="form-control"
+                      placeholder="Select a country"
+                      value={countrySearch}
+                      onChange={(e) => {
+                        setCountrySearch(e.target.value)
+                        setFormData(prev => ({ ...prev, country: '' }))
+                        setShowDropdown(true)
+                      }}
+                      onFocus={() => setShowDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                      disabled={loading}
+                      autoComplete="off"
+                    />
+
+                    {/* Dropdown List */}
+                    {showDropdown && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '100%',
+                          left: 0,
+                          right: 0,
+                          maxHeight: 220,
+                          overflowY: 'auto',
+                          background: '#1a1a1a',
+                          border: '0.5px solid #444',
+                          borderRadius: 8,
+                          zIndex: 999,
+                          marginTop: 4,
+                        }}
+                      >
+                        {ALL_COUNTRIES
+                          .filter(c =>
+                            c.toLowerCase().includes(countrySearch.toLowerCase())
+                          )
+                          .map(c => (
+                            <div
+                              key={c}
+                              onMouseDown={() => {
+                                setFormData(prev => ({ ...prev, country: c }))
+                                setCountrySearch(c)
+                                setShowDropdown(false)
+                              }}
+                              style={{
+                                padding: '10px 14px',
+                                fontSize: 14,
+                                cursor: 'pointer',
+                                color: '#fff',
+                                borderBottom: '0.5px solid #2a2a2a',
+                                background: formData.country === c ? '#2a2a2a' : 'transparent',
+                              }}
+                              onMouseEnter={e => e.target.style.background = '#2a2a2a'}
+                              onMouseLeave={e =>
+                                e.target.style.background =
+                                  formData.country === c ? '#2a2a2a' : 'transparent'
+                              }
+                            >
+                              {c}
+                            </div>
+                          ))
+                        }
+
+                        {/* No results message */}
+                        {ALL_COUNTRIES.filter(c =>
+                          c.toLowerCase().includes(countrySearch.toLowerCase())
+                        ).length === 0 && (
+                          <div
+                            style={{
+                              padding: '10px 14px',
+                              fontSize: 13,
+                              color: '#888'
+                            }}
+                          >
+                            No country found
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Account Number */}
@@ -372,6 +477,52 @@ const InternationalTransfer = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* Fee Display */}
+                {formData.amount && parseFloat(formData.amount) > 0 && (
+                  <div style={{
+                    background: 'rgba(255,107,0,0.06)',
+                    border: '1px solid rgba(255,107,0,0.2)',
+                    borderRadius: '10px',
+                    padding: '1rem 1.25rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.5rem'
+                    }}>
+                      <span style={{ color: '#888', fontSize: '0.875rem' }}>Transfer Amount</span>
+                      <span style={{ color: '#fff', fontWeight: 600 }}>
+                        ${parseFloat(formData.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.5rem'
+                    }}>
+                      <span style={{ color: '#888', fontSize: '0.875rem' }}>Transaction Fee</span>
+                      <span style={{ color: '#FF6B00', fontWeight: 600 }}>+$35.00</span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      paddingTop: '0.5rem',
+                      borderTop: '1px solid rgba(255,255,255,0.08)'
+                    }}>
+                      <span style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 700 }}>Total Deducted</span>
+                      <span style={{ color: '#FF6B00', fontSize: '1.1rem', fontWeight: 800 }}>
+                        ${(parseFloat(formData.amount || 0) + TRANSFER_FEE).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Exchange Rate Preview */}
                 {formData.amount && (
@@ -497,7 +648,7 @@ const InternationalTransfer = () => {
         onFrozen={handleFrozen}
         transactionDetails={{
           recipient: formData.recipientName,
-          amount: `${formData.currency} ${parseFloat(formData.amount).toFixed(2)} ($${parseFloat(convertedAmount).toFixed(2)})`,
+          amount: `${formData.currency} ${parseFloat(formData.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ($${parseFloat(convertedAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`,
         }}
       />
 

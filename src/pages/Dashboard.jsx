@@ -21,10 +21,11 @@ import './Dashboard.css'
  * 
  * User dashboard displaying:
  * - Account balance
+ * - Account number (with copy button)
  * - Recent transactions
  * - Quick action buttons for transfers
  * - Fetches data from:
- *   - GET /account (balance)
+ *   - GET /account (balance, account_number)
  *   - GET /transactions/recent (recent transactions)
  */
 const Dashboard = () => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
   const [recentTransactions, setRecentTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [copied, setCopied] = useState(false)
   const navigate = useNavigate()
   const { user } = useAuth()
   const { t } = useTranslation()
@@ -44,22 +46,32 @@ const Dashboard = () => {
         
         // Fetch account data
         const accountResponse = await axiosInstance.get('/account')
+        console.log('[Dashboard] /account API Response:', accountResponse.data)
+        
         const accountData = accountResponse.data.data || accountResponse.data
+        console.log('[Dashboard] Extracted accountData:', accountData)
+        console.log('[Dashboard] Account Number from API:', accountData?.account_number)
         
         // Fetch balance separately (same way as WireTransfer)
         const balanceResponse = await axiosInstance.get('/transactions/balance')
         const balanceData = balanceResponse.data.data || balanceResponse.data
         
         // Merge account data with balance
-        setAccountData({
+        const merged = {
           ...accountData,
           balance: balanceData.total_balance || balanceData.balance || 0
-        })
+        }
+        
+        console.log('[Dashboard] Final merged accountData:', merged)
+        console.log('[Dashboard] Final account_number:', merged.account_number)
+        
+        setAccountData(merged)
 
         // Fetch recent transactions
         const transactionsResponse = await axiosInstance.get('/transactions/recent')
         setRecentTransactions(transactionsResponse.data.data || transactionsResponse.data || [])
       } catch (err) {
+        console.error('[Dashboard] Error fetching data:', err)
         const message = err.response?.data?.message || t('messages.failedLoadDashboard')
         setError(message)
       } finally {
@@ -70,6 +82,21 @@ const Dashboard = () => {
     fetchDashboardData()
   }, [])
 
+  // Copy account number to clipboard
+  const handleCopyAccountNumber = () => {
+    if (accountData?.account_number) {
+      navigator.clipboard.writeText(accountData.account_number)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  // Format account number as 1234 5678 9012
+  const formatAccountNumber = (number) => {
+    if (!number) return null
+    return number.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3')
+  }
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -79,6 +106,9 @@ const Dashboard = () => {
       </DashboardLayout>
     )
   }
+
+  console.log('[Dashboard] Rendering with accountData:', accountData)
+  console.log('[Dashboard] account_number value:', accountData?.account_number)
 
   return (
     <DashboardLayout>
@@ -115,7 +145,7 @@ const Dashboard = () => {
               </div>
             </div>
             <h2 className="card-value">
-              ${accountData?.balance?.toFixed(2) || '0.00'}
+              ${parseFloat(accountData?.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h2>
             <button
               className="btn btn-primary w-100"
@@ -133,7 +163,32 @@ const Dashboard = () => {
                 <CreditCard size={28} />
               </div>
             </div>
-            <h2 className="card-value">{accountData?.account_number || 'N/A'}</h2>
+            <h2 className="card-value" style={{ letterSpacing: '2px', fontSize: '1.8rem', marginBottom: '1rem' }}>
+              {accountData?.account_number 
+                ? formatAccountNumber(accountData.account_number)
+                : 'Generating...'}
+            </h2>
+            {accountData?.account_number && (
+              <button
+                onClick={handleCopyAccountNumber}
+                title={copied ? 'Copied!' : 'Copy account number'}
+                style={{
+                  background: 'transparent',
+                  border: '0.5px solid #E07B00',
+                  borderRadius: 6,
+                  padding: '6px 12px',
+                  color: copied ? '#1D9E75' : '#E07B00',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  marginBottom: '1rem',
+                  width: '100%'
+                }}
+              >
+                {copied ? '✓ Copied!' : 'Copy'}
+              </button>
+            )}
             <button
               className="btn btn-secondary w-100"
               onClick={() => navigate('/direct-deposit')}

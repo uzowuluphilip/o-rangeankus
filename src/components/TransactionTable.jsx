@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
+import { formatShortDate } from '../utils/dateUtils'
 
 /**
  * TransactionTable Component
  * 
  * Reusable table component for displaying transactions.
  * Features:
- * - Responsive design
+ * - Responsive design with local timezone dates
  * - Status badge coloring
  * - Pagination support
  * - Sortable Date column
@@ -75,15 +76,11 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
         <tbody>
           {sortedTransactions.map((transaction, index) => (
             <tr key={transaction.id || transaction.transaction_id || `transaction-${index}`}>
-              <td>{new Date(transaction.posting_date || transaction.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric'
-              })}</td>
+              <td>{formatShortDate(transaction.posting_date || transaction.created_at)}</td>
               <td className="fw-bold">{transaction.type_display || transaction.type || transaction.transaction_type || 'Transfer'}</td>
               <td className="text-secondary hide-on-mobile description-cell">{transaction.description || '-'}</td>
               <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
-                {transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount).toFixed(2)}
+                {transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
               <td>
                 <span className={`badge ${getStatusBadge(transaction)}`}>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
+import { formatShortDate, formatDateTime, formatForDatetimeInput } from '../utils/dateUtils'
 
 const AdminTransactionDates = () => {
   const [transactions, setTransactions] = useState([])
   const [selected, setSelected] = useState(null)
-  const [postingDate, setPostingDate] = useState('')
-  const [valueDate, setValueDate] = useState('')
+  const [transactionDate, setTransactionDate] = useState('')
   const [loadingTxns, setLoadingTxns] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -31,9 +31,7 @@ const AdminTransactionDates = () => {
 
   // Format date from backend format to datetime-local format
   const formatForInput = (dateStr) => {
-    if (!dateStr) return ''
-    // Convert '2026-03-01 12:00:00' to '2026-03-01T12:00'
-    return dateStr.replace(' ', 'T').slice(0, 16)
+    return formatForDatetimeInput(dateStr)
   }
 
   // Format date from datetime-local back to backend format
@@ -45,8 +43,7 @@ const AdminTransactionDates = () => {
 
   const selectTransaction = (txn) => {
     setSelected(txn)
-    setPostingDate(formatForInput(txn.posting_date || txn.created_at))
-    setValueDate(formatForInput(txn.value_date || txn.created_at))
+    setTransactionDate(formatForInput(txn.posting_date || txn.created_at))
     setSuccess('')
     setError('')
   }
@@ -59,8 +56,7 @@ const AdminTransactionDates = () => {
 
       const payload = {
         transaction_id: selected.transaction_id,
-        posting_date: formatForBackend(postingDate),
-        value_date: formatForBackend(valueDate)
+        posting_date: formatForBackend(transactionDate)
       }
 
       const resp = await axiosInstance.post('/admin/transactions/update-dates', payload)
@@ -114,9 +110,10 @@ const AdminTransactionDates = () => {
                   <tr key={txn.transaction_id} className={selected?.transaction_id === txn.transaction_id ? 'table-primary' : ''}>
                     <td className="hide-on-mobile"><small>{txn.transaction_id}</small></td>
                     <td><small>{txn.first_name} {txn.last_name}</small></td>
-                    <td><strong>${Number(txn.amount).toFixed(2)}</strong></td>
+                    <td><strong>${Number(txn.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
                     <td className="hide-on-mobile"><small>{txn.type_display || txn.transaction_type || txn.type}</small></td>
                     <td><span className={`badge bg-${txn.status === 'completed' ? 'success' : 'warning'}`}>{txn.status}</span></td>
+                    <td><small>{formatShortDate(txn.posting_date || txn.created_at)}</small></td>
                     <td>
                       <button className="btn btn-sm btn-outline-light" onClick={() => selectTransaction(txn)}>Edit dates</button>
                     </td>
@@ -133,22 +130,12 @@ const AdminTransactionDates = () => {
           <h5 className="mb-4">Edit transaction #{selected.transaction_id}</h5>
           <div className="row g-3 mb-3">
             <div className="col-md-6">
-              <label className="form-label">Posting Date</label>
+              <label className="form-label">Transaction Date</label>
               <input 
                 type="datetime-local"
                 className="form-control"
-                value={postingDate} 
-                onChange={(e) => setPostingDate(e.target.value)}
-                style={{ colorScheme: 'dark' }}
-              />
-            </div>
-            <div className="col-md-6">
-              <label className="form-label">Value Date</label>
-              <input 
-                type="datetime-local"
-                className="form-control"
-                value={valueDate} 
-                onChange={(e) => setValueDate(e.target.value)}
+                value={transactionDate} 
+                onChange={(e) => setTransactionDate(e.target.value)}
                 style={{ colorScheme: 'dark' }}
               />
             </div>

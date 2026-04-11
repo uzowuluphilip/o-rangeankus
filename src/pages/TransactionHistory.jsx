@@ -195,7 +195,7 @@ const TransactionHistory = () => {
                     const total = (Array.isArray(transactions) ? transactions : [])
                       .filter(t => t && parseFloat(t.amount) > 0)
                       .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
-                    return (total || 0).toFixed(2);
+                    return parseFloat(total || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                   })()}
                 </h3>
               </div>
@@ -211,7 +211,7 @@ const TransactionHistory = () => {
                     const total = (Array.isArray(transactions) ? transactions : [])
                       .filter(t => t && parseFloat(t.amount) < 0)
                       .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
-                    return Math.abs(total || 0).toFixed(2);
+                    return parseFloat(Math.abs(total || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                   })()}
                 </h3>
               </div>

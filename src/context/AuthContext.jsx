@@ -1,13 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 /**
- * AuthContext - Manages global authentication state
- * Provides:
- * - user: Current logged-in user object
- * - token: JWT token stored in localStorage
- * - login: Function to authenticate and set user + token
- * - logout: Function to clear user and token
+ * Helper function to build full profile picture URL
+ * Converts relative paths like /uploads/profiles/image.jpg to full URLs
  */
+const getFullProfilePictureUrl = (relativePath) => {
+  if (!relativePath) return null
+  
+  // If already a full URL, return as-is
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath
+  }
+  
+  // For Vite, access import.meta.env.VITE_API_URL
+  // Defaults to production API URL if not set
+  const apiBaseUrl = import.meta.env.VITE_API_URL || 'https://api.orangeankus.com'
+  
+  return `${apiBaseUrl}${relativePath}`
+}
 const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
@@ -27,6 +37,10 @@ export const AuthProvider = ({ children }) => {
         if (storedUser !== 'undefined' && storedUser !== 'null') {
           try {
             const parsedUser = JSON.parse(storedUser)
+            // Ensure profile_picture URL is full
+            if (parsedUser.profile_picture) {
+              parsedUser.profile_picture = getFullProfilePictureUrl(parsedUser.profile_picture)
+            }
             setToken(storedToken)
             setUser(parsedUser)
           } catch (parseError) {
@@ -46,12 +60,30 @@ export const AuthProvider = ({ children }) => {
     setLoading(false)
   }, [])
 
+  // Update profile picture in state
+  const updateProfilePicture = (url) => {
+    const fullUrl = getFullProfilePictureUrl(url)
+    setUser(prev => ({ 
+      ...prev, 
+      profile_picture: fullUrl
+    }))
+    // Also update localStorage
+    const storedUser = JSON.parse(localStorage.getItem('authUser') || '{}')
+    storedUser.profile_picture = fullUrl
+    localStorage.setItem('authUser', JSON.stringify(storedUser))
+  }
+
   // Login user - stores token and user data
   const login = (userData, authToken) => {
-    setUser(userData)
+    // Build full profile picture URL if it's a relative path
+    const userWithFullUrl = {
+      ...userData,
+      profile_picture: getFullProfilePictureUrl(userData?.profile_picture)
+    }
+    setUser(userWithFullUrl)
     setToken(authToken)
     localStorage.setItem('authToken', authToken)
-    localStorage.setItem('authUser', JSON.stringify(userData))
+    localStorage.setItem('authUser', JSON.stringify(userWithFullUrl))
   }
 
   // Logout user - clears all auth data
@@ -71,7 +103,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated,
     login,
-    logout
+    logout,
+    updateProfilePicture
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

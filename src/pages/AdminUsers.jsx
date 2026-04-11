@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
+import { formatShortDate } from '../utils/dateUtils'
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([])
@@ -89,7 +90,7 @@ const AdminUsers = () => {
                   <td className="hide-on-mobile">{user.role}</td>
                   <td>
                     {user.created_at 
-                      ? new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                      ? formatShortDate(user.created_at)
                       : 'Unknown Date'
                     }
                   </td>

@@ -4,6 +4,7 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import TransactionTable from '../components/TransactionTable'
 import axiosInstance from '../api/axios'
 import { useAuth } from '../context/AuthContext'
+import { formatShortDate } from '../utils/dateUtils'
 
 /**
  * Admin Dashboard Page
@@ -181,7 +182,7 @@ const AdminDashboard = () => {
             <div className="card text-center">
               <div className="card-body">
                 <h6 className="card-title text-secondary mb-2">Total Volume</h6>
-                <h2 className="text-info fw-bold">${(stats.total_volume || 0).toFixed(2)}</h2>
+                <h2 className="text-info fw-bold">${parseFloat(stats.total_volume || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
                 <p className="text-secondary small">Processed</p>
               </div>
             </div>
@@ -227,7 +228,7 @@ const AdminDashboard = () => {
                         <td className="text-secondary hide-on-mobile">{user.email || 'N/A'}</td>
                         <td className="text-secondary hide-on-mobile small">
                           {user.created_at 
-                            ? new Date(user.created_at).toLocaleDateString()
+                            ? formatShortDate(user.created_at)
                             : 'Unknown Date'
                           }
                         </td>

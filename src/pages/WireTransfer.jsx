@@ -18,10 +18,13 @@ import { DollarSign, Lightbulb } from 'lucide-react'
  * Features:
  * - Form for wire transfer details
  * - Recipient name, bank, account number, amount
+ * - $35 transaction fee
  * - PIN security before transfer
  * - Transaction receipt modal
  * - Bootstrap + inline styling
  */
+const TRANSFER_FEE = 35
+
 const WireTransfer = () => {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
@@ -72,8 +75,11 @@ const WireTransfer = () => {
 
     if (!validateForm()) return
 
-    if (parseFloat(formData.amount) > accountBalance) {
-      setError(t('wireTransfer.insufficientBalance'))
+    const transferAmount = parseFloat(formData.amount)
+    const totalDeducted = transferAmount + TRANSFER_FEE
+
+    if (totalDeducted > accountBalance) {
+      setError(`Insufficient balance. You need $${totalDeducted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (including $${TRANSFER_FEE} fee)`)
       return
     }
 
@@ -85,7 +91,9 @@ const WireTransfer = () => {
         bank: formData.bank,
         account_number: formData.accountNumber,
         routing_number: formData.routingNumber,
-        amount: parseFloat(formData.amount),
+        amount: transferAmount,
+        fee: TRANSFER_FEE,
+        total_deducted: totalDeducted,
         purpose: formData.purpose
       })
 
@@ -97,11 +105,11 @@ const WireTransfer = () => {
         reference: response.data.reference_code || response.data?.reference,
         type: response.data.type || 'Wire Transfer',
         amount: response.data.amount || formData.amount,
+        fee: TRANSFER_FEE,
         recipient: formData.recipientName,
         description: formData.purpose || 'Wire Transfer',
         status: response.data.status || 'completed',
         posting_date: response.data.posting_date || new Date().toISOString(),
-        value_date: response.data.value_date || new Date().toISOString(),
         sender: user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'User',
         bank: formData.bank
       })
@@ -194,7 +202,7 @@ const WireTransfer = () => {
       <div className="mb-5">
         <h1 className="h3 text-primary-text mb-2"><DollarSign size={28} className="me-2" style={{display: 'inline-block'}} /> {t('wireTransfer.title')}</h1>
         <p className="text-secondary">{t('wireTransfer.subtitle')}</p>
-        <p className="text-secondary">{t('wireTransfer.availableBalance', { amount: accountBalance.toFixed(2) })}</p>
+        <p className="text-secondary">{t('wireTransfer.availableBalance', { amount: parseFloat(accountBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) })}</p>
       </div>
 
       <div className="row">
@@ -316,6 +324,52 @@ const WireTransfer = () => {
                   </div>
                 </div>
 
+                {/* Fee Display */}
+                {formData.amount && parseFloat(formData.amount) > 0 && (
+                  <div style={{
+                    background: 'rgba(255,107,0,0.06)',
+                    border: '1px solid rgba(255,107,0,0.2)',
+                    borderRadius: '10px',
+                    padding: '1rem 1.25rem',
+                    marginBottom: '1.5rem'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.5rem'
+                    }}>
+                      <span style={{ color: '#888', fontSize: '0.875rem' }}>Transfer Amount</span>
+                      <span style={{ color: '#fff', fontWeight: 600 }}>
+                        ${parseFloat(formData.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.5rem'
+                    }}>
+                      <span style={{ color: '#888', fontSize: '0.875rem' }}>Transaction Fee</span>
+                      <span style={{ color: '#FF6B00', fontWeight: 600 }}>+$35.00</span>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      paddingTop: '0.5rem',
+                      borderTop: '1px solid rgba(255,255,255,0.08)'
+                    }}>
+                      <span style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 700 }}>Total Deducted</span>
+                      <span style={{ color: '#FF6B00', fontSize: '1.1rem', fontWeight: 800 }}>
+                        ${(parseFloat(formData.amount || 0) + TRANSFER_FEE).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Purpose */}
                 <div className="mb-4">
                   <label htmlFor="purpose" className="form-label text-primary-text">
@@ -419,7 +473,7 @@ const WireTransfer = () => {
         onFrozen={handleFrozen}
         transactionDetails={{
           recipient: formData.recipientName,
-          amount: `$${parseFloat(formData.amount).toFixed(2)}`,
+          amount: `$${parseFloat(formData.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         }}
       />
 

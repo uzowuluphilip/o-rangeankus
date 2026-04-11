@@ -160,7 +160,7 @@ const AdminBalance = () => {
                           </div>
                           <div className="text-end">
                             <div className="fw-bold">
-                              ${parseFloat(user.balance || user.total_balance || 0).toFixed(2)}
+                            ${parseFloat(user.balance || user.total_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <small className="text-muted">Current balance</small>
                           </div>
@@ -231,20 +231,20 @@ const AdminBalance = () => {
                       <input
                         type="text"
                         className="form-control bg-dark border-secondary text-white"
-                        value={parseFloat(selectedUser.balance || selectedUser.total_balance || 0).toFixed(2)}
+                        value={parseFloat(selectedUser.balance || selectedUser.total_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         disabled
                       />
                     </div>
                   </div>
 
                   <div className="mb-4">
-                    <label className="form-label text-primary-text">New Balance</label>
+                    <label className="form-label text-primary-text">Amount to Add</label>
                     <div className="input-group">
                       <span className="input-group-text bg-dark border-secondary text-primary-orange">$</span>
                       <input
                         type="number"
                         className="form-control bg-dark border-secondary text-white"
-                        placeholder="0.00"
+                        placeholder="Enter amount to add e.g. 1000"
                         step="0.01"
                         min="0"
                         value={newBalance}
@@ -257,9 +257,54 @@ const AdminBalance = () => {
                       />
                     </div>
                     <small className="text-muted d-block mt-2">
-                      Difference: ${(parseFloat(newBalance || 0) - parseFloat(selectedUser.balance || selectedUser.total_balance || 0)).toFixed(2)}
+                      {newBalance > 0 ? `Will add $${parseFloat(newBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Enter amount to add'}
                     </small>
                   </div>
+
+                  {/* ✅ Preview of balance change */}
+                  {parseFloat(newBalance) > 0 && (
+                    <div 
+                      style={{
+                        background: 'rgba(255,107,0,0.06)',
+                        border: '1px solid rgba(255,107,0,0.2)',
+                        borderRadius: '10px',
+                        padding: '1rem',
+                        marginBottom: '1.5rem'
+                      }}
+                    >
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: '0.75rem'
+                      }}>
+                        <span style={{ color: '#888', fontSize: '0.875rem' }}>Current Balance</span>
+                        <span style={{ color: '#fff', fontWeight: 600 }}>
+                          ${parseFloat(selectedUser.balance || selectedUser.total_balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginBottom: '0.75rem'
+                      }}>
+                        <span style={{ color: '#888', fontSize: '0.875rem' }}>Amount Adding</span>
+                        <span style={{ color: '#4dff88', fontWeight: 600 }}>
+                          +${parseFloat(newBalance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        paddingTop: '0.75rem',
+                        borderTop: '1px solid rgba(255,255,255,0.08)'
+                      }}>
+                        <span style={{ color: '#fff', fontWeight: 700 }}>New Balance</span>
+                        <span style={{ color: '#FF6B00', fontWeight: 800, fontSize: '1.1rem' }}>
+                          ${(parseFloat(selectedUser.balance || selectedUser.total_balance || 0) + parseFloat(newBalance || 0)).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </div>
+                  )}
 
                   <button
                     type="button"

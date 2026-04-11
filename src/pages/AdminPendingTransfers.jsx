@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
+import { formatShortDate } from '../utils/dateUtils'
 
 const AdminPendingTransfers = () => {
   const [transactions, setTransactions] = useState([])
@@ -92,10 +93,10 @@ const AdminPendingTransfers = () => {
                   <td><strong>{txn.first_name} {txn.last_name}</strong></td>
                   <td><small>{txn.type_display || txn.transaction_type}</small></td>
                   <td><strong className={txn.amount < 0 ? 'text-danger' : 'text-success'}>
-                    {txn.amount < 0 ? '-' : '+'}${Math.abs(txn.amount).toFixed(2)}
+                    {txn.amount < 0 ? '-' : '+'}${Math.abs(txn.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </strong></td>
                   <td className="text-secondary small">{txn.description || '-'}</td>
-                  <td className="hide-on-mobile small">{new Date(txn.created_at).toLocaleDateString()}</td>
+                  <td className="hide-on-mobile small">{formatShortDate(txn.created_at)}</td>
                   <td className="action-buttons d-flex gap-2">
                     <button 
                       className="btn btn-success btn-sm me-2" 
