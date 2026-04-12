@@ -37,8 +37,21 @@ const AdminTransactionDates = () => {
   // Format date from datetime-local back to backend format
   const formatForBackend = (dateStr) => {
     if (!dateStr) return null
-    // Convert '2026-03-01T12:00' back to '2026-03-01 12:00:00'
-    return dateStr.replace('T', ' ') + ':00'
+    // datetime-local format is: YYYY-MM-DDTHH:mm or YYYY-MM-DDTHH:mm:ss
+    // Convert to backend format: YYYY-MM-DD HH:mm:ss
+    const parts = dateStr.split('T')
+    if (parts.length !== 2) return null
+    
+    const [datePart, timePart] = parts
+    
+    // If time is HH:mm (2 colons), add :00 for seconds
+    // If time is HH:mm:ss (3 colons), use as-is
+    const timeSegments = timePart.split(':')
+    const timeWithSeconds = timeSegments.length === 2 
+      ? `${timePart}:00`
+      : timePart
+      
+    return `${datePart} ${timeWithSeconds}`
   }
 
   const selectTransaction = (txn) => {
