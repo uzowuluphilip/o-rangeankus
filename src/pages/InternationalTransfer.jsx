@@ -396,7 +396,7 @@ const InternationalTransfer = () => {
                   </div>
                 </div>
 
-                {/* Account Number */}
+                {/* Account Number/IBAN */}
                 <div className="mb-4">
                   <label htmlFor="accountNumber" className="form-label text-primary-text">
                     {t('internationalTransfer.formLabels.accountNumber')} <span className="text-danger">*</span>
@@ -413,7 +413,7 @@ const InternationalTransfer = () => {
                   />
                 </div>
 
-                {/* SWIFT Code */}
+                {/* Swift Code */}
                 <div className="mb-4">
                   <label htmlFor="swiftCode" className="form-label text-primary-text">
                     {t('internationalTransfer.formLabels.swiftCode')} <span className="text-danger">*</span>

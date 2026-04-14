@@ -33,6 +33,7 @@ const WireTransfer = () => {
   
   const [formData, setFormData] = useState({
     recipientName: '',
+    recipientAddress: '',
     bank: '',
     accountNumber: '',
     routingNumber: '',
@@ -55,6 +56,10 @@ const WireTransfer = () => {
     }
     if (!formData.bank.trim()) {
       setError(t('wireTransfer.bankNameRequired'))
+      return false
+    }
+    if (!formData.recipientAddress.trim()) {
+      setError(t('wireTransfer.recipientAddressRequired'))
       return false
     }
     if (!formData.accountNumber.trim()) {
@@ -88,6 +93,7 @@ const WireTransfer = () => {
       const response = await axiosInstance.post('/transactions/simulate', {
         type: 'wire',
         recipient_name: formData.recipientName,
+        recipient_address: formData.recipientAddress,
         bank: formData.bank,
         account_number: formData.accountNumber,
         routing_number: formData.routingNumber,
@@ -107,6 +113,7 @@ const WireTransfer = () => {
         amount: response.data.amount || formData.amount,
         fee: TRANSFER_FEE,
         recipient: formData.recipientName,
+        recipientAddress: formData.recipientAddress,
         description: formData.purpose || 'Wire Transfer',
         status: response.data.status || 'completed',
         posting_date: response.data.posting_date || new Date().toISOString(),
@@ -119,6 +126,7 @@ const WireTransfer = () => {
       // Reset form
       setFormData({
         recipientName: '',
+        recipientAddress: '',
         bank: '',
         accountNumber: '',
         routingNumber: '',
@@ -261,6 +269,23 @@ const WireTransfer = () => {
                     id="bank"
                     name="bank"
                     value={formData.bank}
+                    onChange={handleChange}
+                    disabled={loading}
+                  />
+                </div>
+
+                {/* Recipient Address */}
+                <div className="mb-4">
+                  <label htmlFor="recipientAddress" className="form-label text-primary-text">
+                    {t('wireTransfer.formLabels.recipientAddress')} <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="recipientAddress"
+                    name="recipientAddress"
+                    placeholder="123 Main Street, New York, NY 10001"
+                    value={formData.recipientAddress}
                     onChange={handleChange}
                     disabled={loading}
                   />

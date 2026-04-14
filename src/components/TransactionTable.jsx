@@ -33,18 +33,59 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
     )
   }
 
-  // Determine badge color based on transaction type/status
+  // Determine badge color based on transaction status
   const getStatusBadge = (transaction) => {
-    const type = transaction.type || transaction.status
+    // ONLY use status, never type
+    const status = transaction.status
     const badgeMap = {
       completed: 'bg-success',
       pending: 'bg-warning',
       failed: 'bg-danger',
-      deposit: 'bg-success',
-      withdrawal: 'bg-danger',
-      transfer: 'bg-info'
+      rejected: 'bg-danger'
     }
-    return badgeMap[type] || 'bg-secondary'
+    // Default to red (danger) for any unknown status, not gray
+    return badgeMap[status] || 'bg-danger'
+  }
+
+  // Get display name for transaction status
+  const getStatusDisplay = (transaction) => {
+    // Get the actual status from the transaction
+    const status = transaction.status
+    
+    // If status exists, capitalize and return it
+    if (status) {
+      return status.charAt(0).toUpperCase() + status.slice(1)
+    }
+    
+    // Default to Rejected if no status is found
+    return 'Rejected'
+  }
+
+  // Get display name for transaction type
+  const getTransactionTypeDisplay = (transaction) => {
+    // Check description first for Wire/International (most reliable)
+    const description = transaction.description || ''
+    if (description.toLowerCase().includes('wire')) {
+      return 'Transfer'
+    }
+    if (description.toLowerCase().includes('international')) {
+      return 'Transfer'
+    }
+    if (description.toLowerCase().includes('direct_deposit')) {
+      return 'Transfer'
+    }
+    
+    // Fall back to type field
+    const type = transaction.type || transaction.transaction_type
+    const typeMap = {
+      wire: 'Transfer',
+      international: 'Transfer',
+      direct_deposit: 'Transfer',
+      deposit: 'Deposit',
+      withdrawal: 'Withdrawal',
+      profit: 'Profit'
+    }
+    return typeMap[type] || type || 'Transfer'
   }
 
   // Sort transactions by date before rendering
@@ -77,14 +118,14 @@ const TransactionTable = ({ transactions, loading, onPageChange, currentPage, to
           {sortedTransactions.map((transaction, index) => (
             <tr key={transaction.id || transaction.transaction_id || `transaction-${index}`}>
               <td>{formatShortDate(transaction.posting_date || transaction.created_at)}</td>
-              <td className="fw-bold">{transaction.type_display || transaction.type || transaction.transaction_type || 'Transfer'}</td>
+              <td className="fw-bold">{getTransactionTypeDisplay(transaction)}</td>
               <td className="text-secondary hide-on-mobile description-cell">{transaction.description || '-'}</td>
               <td className={transaction.amount < 0 ? 'text-danger' : 'text-success'}>
                 {transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
               <td>
                 <span className={`badge ${getStatusBadge(transaction)}`}>
-                  {transaction.status || transaction.type}
+                  {getStatusDisplay(transaction)}
                 </span>
               </td>
             </tr>

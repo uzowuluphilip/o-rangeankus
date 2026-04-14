@@ -115,6 +115,7 @@ const AdminTransactionDates = () => {
                   <th>Amount</th>
                   <th className="hide-on-mobile">Type</th>
                   <th>Status</th>
+                  <th className="hide-on-mobile">Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -125,7 +126,16 @@ const AdminTransactionDates = () => {
                     <td><small>{txn.first_name} {txn.last_name}</small></td>
                     <td><strong>${Number(txn.amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></td>
                     <td className="hide-on-mobile"><small>{txn.type_display || txn.transaction_type || txn.type}</small></td>
-                    <td><span className={`badge bg-${txn.status === 'completed' ? 'success' : 'warning'}`}>{txn.status}</span></td>
+                    <td>
+                      <span className={`badge ${
+                        txn.status === 'completed' ? 'bg-success' :
+                        txn.status === 'rejected' || txn.status === 'failed' ? 'bg-danger' :
+                        txn.status === 'pending' ? 'bg-warning' :
+                        'bg-secondary'
+                      }`}>
+                        {txn.status ? txn.status.charAt(0).toUpperCase() + txn.status.slice(1) : 'No Status'}
+                      </span>
+                    </td>
                     <td><small>{formatShortDate(txn.posting_date || txn.created_at)}</small></td>
                     <td>
                       <button className="btn btn-sm btn-outline-light" onClick={() => selectTransaction(txn)}>Edit dates</button>

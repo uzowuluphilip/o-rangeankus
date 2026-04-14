@@ -233,6 +233,7 @@
     "availableBalance": "Verfügbarer Saldo: ${{amount}}",
     "recipientNameRequired": "Name des Empfängers ist erforderlich",
     "bankNameRequired": "Bankname ist erforderlich",
+    "recipientAddressRequired": "Adresse des Empfängers ist erforderlich",
     "accountNumberRequired": "Kontonummer ist erforderlich",
     "validAmountRequired": "Bitte geben Sie einen gültigen Betrag ein",
     "insufficientBalance": "Unzureichender Saldo. Bitte verwenden Sie Direkteinzahlung oder laden Sie Ihr Konto auf.",
@@ -241,6 +242,7 @@
     "formLabels": {
       "recipientName": "Name des Empfängers",
       "bank": "Bankname",
+      "recipientAddress": "Adresse des Empfängers",
       "accountNumber": "Kontonummer",
       "routingNumber": "Routing-Nummer",
       "amount": "Betrag",
@@ -275,8 +277,8 @@
     "formLabels": {
       "recipientName": "Name des Empfängers",
       "country": "Land",
-      "accountNumber": "Kontonummer",
-      "swiftCode": "SWIFT-Code",
+      "accountNumber": "Kontonummer/IBAN",
+      "swiftCode": "Swift-Code",
       "currency": "Währung",
       "amount": "Betrag (USD)",
       "purpose": "Zweck"

@@ -30,6 +30,7 @@ const TransactionReceiptModal = ({ receipt, onClose }) => {
       ['Type', receipt.type || 'Transfer'],
       ['From', receipt.sender || 'N/A'],
       ['To', receipt.recipient || 'N/A'],
+      ...(receipt.recipientAddress ? [['Recipient Address', receipt.recipientAddress]] : []),
       ['Description', receipt.description || 'N/A'],
       ['Transaction Date', formatDateTime(receipt.posting_date || receipt.created_at)],
     ]
@@ -294,6 +295,7 @@ const TransactionReceiptModal = ({ receipt, onClose }) => {
             ['Type', receipt.type || 'Transfer'],
             ['From', receipt.sender || 'N/A'],
             ['To', receipt.recipient || 'N/A'],
+            ...(receipt.recipientAddress ? [['Recipient Address', receipt.recipientAddress]] : []),
             ['Description', receipt.description || 'N/A'],
             ['Transaction Date', formatDateTime(receipt.posting_date || receipt.created_at)],
           ].map(([label, value]) => (

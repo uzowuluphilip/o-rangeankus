@@ -237,6 +237,7 @@
     "availableBalance": "Solde disponible: ${{amount}}",
     "recipientNameRequired": "Le nom du bénéficiaire est obligatoire",
     "bankNameRequired": "Le nom de la banque est obligatoire",
+    "recipientAddressRequired": "L'adresse du bénéficiaire est obligatoire",
     "accountNumberRequired": "Le numéro de compte est obligatoire",
     "validAmountRequired": "Veuillez entrer un montant valide",
     "insufficientBalance": "Solde insuffisant. Veuillez utiliser le dépôt direct ou créditer votre compte.",
@@ -245,6 +246,7 @@
     "formLabels": {
       "recipientName": "Nom du Bénéficiaire",
       "bank": "Nom de la Banque",
+      "recipientAddress": "Adresse du Bénéficiaire",
       "accountNumber": "Numéro de Compte",
       "routingNumber": "Numéro d'acheminement",
       "amount": "Montant",
@@ -279,8 +281,8 @@
     "formLabels": {
       "recipientName": "Nom du Bénéficiaire",
       "country": "Pays",
-      "accountNumber": "Numéro de Compte",
-      "swiftCode": "Code SWIFT",
+      "accountNumber": "Numéro de Compte/IBAN",
+      "swiftCode": "Code Swift",
       "currency": "Devise",
       "amount": "Montant (USD)",
       "purpose": "Objet"

@@ -243,6 +243,7 @@
     "availableBalance": "Available balance: ${{amount}}",
     "recipientNameRequired": "Recipient name is required",
     "bankNameRequired": "Bank name is required",
+    "recipientAddressRequired": "Recipient address is required",
     "accountNumberRequired": "Account number is required",
     "validAmountRequired": "Please enter a valid amount",
     "insufficientBalance": "Insufficient balance. Please use Direct Deposit or top up your account.",
@@ -251,6 +252,7 @@
     "formLabels": {
       "recipientName": "Recipient Name",
       "bank": "Bank Name",
+      "recipientAddress": "Recipient Address",
       "accountNumber": "Account Number",
       "routingNumber": "Routing Number",
       "amount": "Amount",
@@ -285,8 +287,8 @@
     "formLabels": {
       "recipientName": "Recipient Name",
       "country": "Country",
-      "accountNumber": "Account Number",
-      "swiftCode": "SWIFT Code",
+      "accountNumber": "Account Number/IBAN",
+      "swiftCode": "Swift Code",
       "currency": "Currency",
       "amount": "Amount (USD)",
       "purpose": "Purpose"
