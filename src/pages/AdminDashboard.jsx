@@ -64,7 +64,7 @@ const AdminDashboard = () => {
 
         // Fetch transactions
         console.log('[AdminDashboard] Fetching transactions...')
-        const txResponse = await axiosInstance.get('/admin/transactions?limit=10')
+        const txResponse = await axiosInstance.get('/admin/transactions?limit=100')
         console.log('[AdminDashboard] Transactions response:', txResponse.data)
         setTransactions(txResponse.data.data || txResponse.data || [])
         
