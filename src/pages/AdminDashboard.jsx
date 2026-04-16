@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import TransactionTable from '../components/TransactionTable'
@@ -21,6 +22,7 @@ import { formatShortDate } from '../utils/dateUtils'
  */
 const AdminDashboard = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [stats, setStats] = useState(null)
   const [users, setUsers] = useState([])
   const [transactions, setTransactions] = useState([])
@@ -263,8 +265,32 @@ const AdminDashboard = () => {
       {/* Recent Transactions */}
       <div className="row">
         <div className="col-12">
-          <div className="mb-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
             <h5 className="text-primary-text mb-0">Recent Transactions</h5>
+            <button
+              onClick={() => navigate('/admin/transaction-dates')}
+              style={{
+                background: 'rgba(255,107,0,0.1)',
+                border: '1px solid rgba(255,107,0,0.3)',
+                color: '#FF6B00',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={e => {
+                e.currentTarget.style.background = 'rgba(255,107,0,0.2)'
+                e.currentTarget.style.borderColor = '#FF6B00'
+              }}
+              onMouseOut={e => {
+                e.currentTarget.style.background = 'rgba(255,107,0,0.1)'
+                e.currentTarget.style.borderColor = 'rgba(255,107,0,0.3)'
+              }}
+            >
+              View All →
+            </button>
           </div>
 
           <div className="card">
