@@ -81,6 +81,13 @@ const WireTransfer = () => {
     if (!validateForm()) return
 
     const transferAmount = parseFloat(formData.amount)
+    
+    // ✅ Check maximum transaction limit
+    if (transferAmount > 200000) {
+      setError('Maximum transaction limit is $200,000.00 per transaction')
+      return
+    }
+    
     const totalDeducted = transferAmount + TRANSFER_FEE
 
     if (totalDeducted > accountBalance) {
@@ -325,9 +332,23 @@ const WireTransfer = () => {
 
                 {/* Amount */}
                 <div className="mb-4">
-                  <label htmlFor="amount" className="form-label text-primary-text">
-                    {t('wireTransfer.formLabels.amount')} <span className="text-danger">*</span>
-                  </label>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '0.5rem'
+                  }}>
+                    <label htmlFor="amount" className="form-label text-primary-text" style={{ margin: 0 }}>
+                      {t('wireTransfer.formLabels.amount')} <span className="text-danger">*</span>
+                    </label>
+                    <span style={{
+                      color: '#888',
+                      fontSize: '0.8rem',
+                      fontWeight: 500
+                    }}>
+                      Maximum per transaction: <span style={{ color: '#FF6B00', fontWeight: 700 }}>$200,000.00</span>
+                    </span>
+                  </div>
                   <div className="input-group">
                     <span className="input-group-text bg-dark border-secondary text-primary-orange">$</span>
                     <input
