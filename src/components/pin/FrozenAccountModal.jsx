@@ -68,7 +68,7 @@ export default function FrozenAccountModal({ isOpen, onLogout }) {
             marginBottom: '1.5rem',
           }}
         >
-          Your account has been frozen after too many incorrect PIN attempts.
+          Your account has been frozen due to an unauthorized access detected.
           <br />
           <br />
           Please contact your branch or support to unfreeze your account before
