@@ -7,12 +7,28 @@ import enTranslation from './locales/en/translation.json'
 import esTranslation from './locales/es/translation.json'
 import deTranslation from './locales/de/translation.json'
 import frTranslation from './locales/fr/translation.json'
+import ptTranslation from './locales/pt/translation.json'
+import itTranslation from './locales/it/translation.json'
+import jaTranslation from './locales/ja/translation.json'
+import zhTranslation from './locales/zh/translation.json'
+import ruTranslation from './locales/ru/translation.json'
+import arTranslation from './locales/ar/translation.json'
+import thTranslation from './locales/th/translation.json'
+import trTranslation from './locales/tr/translation.json'
 
 const resources = {
   en: { translation: enTranslation },
   es: { translation: esTranslation },
   de: { translation: deTranslation },
-  fr: { translation: frTranslation }
+  fr: { translation: frTranslation },
+  pt: { translation: ptTranslation },
+  it: { translation: itTranslation },
+  ja: { translation: jaTranslation },
+  zh: { translation: zhTranslation },
+  ru: { translation: ruTranslation },
+  ar: { translation: arTranslation },
+  th: { translation: thTranslation },
+  tr: { translation: trTranslation }
 }
 
 // Initialize i18n
