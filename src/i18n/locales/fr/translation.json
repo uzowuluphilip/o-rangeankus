@@ -28,6 +28,7 @@
     "passwordHint": "Au moins 6 caractères",
     "passwordMismatch": "Les mots de passe ne correspondent pas",
     "confirmPassword": "Confirmer le Mot de Passe",
+    "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
     "firstName": "Prénom",
     "firstNameRequired": "Le prénom est obligatoire",
     "firstNamePlaceholder": "Jean",
@@ -177,7 +178,9 @@
     "loading": "Veuillez patienter...",
     "noData": "Aucune donnée disponible",
     "tryAgain": "Réessayer",
-    "contactSupport": "Contacter le Support"
+    "contactSupport": "Contacter le Support",
+    "failedLoadUsers": "Impossible de charger les utilisateurs",
+    "failedLoadData": "Impossible de charger les données"
   },
   "landing": {
     "heroTitle": "Banque Moderne à Votre Portée",
@@ -225,7 +228,9 @@
     "access24_7": "Accès 24/7",
     "bankGradeSecurity": "Sécurité de Niveau Bancaire",
     "accountProtection": "Protection de Compte"
-  },  "footer": {    "about": "À Propos",
+  },
+  "footer": {
+    "about": "À Propos",
     "privacy": "Politique de Confidentialité",
     "terms": "Conditions de Service",
     "contact": "Nous Contacter",

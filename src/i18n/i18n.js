@@ -15,6 +15,7 @@ import ruTranslation from './locales/ru/translation.json'
 import arTranslation from './locales/ar/translation.json'
 import thTranslation from './locales/th/translation.json'
 import trTranslation from './locales/tr/translation.json'
+import roTranslation from './locales/ro/translation.json'
 
 const resources = {
   en: { translation: enTranslation },
@@ -28,7 +29,8 @@ const resources = {
   ru: { translation: ruTranslation },
   ar: { translation: arTranslation },
   th: { translation: thTranslation },
-  tr: { translation: trTranslation }
+  tr: { translation: trTranslation },
+  ro: { translation: roTranslation }
 }
 
 // Initialize i18n

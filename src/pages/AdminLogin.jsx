@@ -29,15 +29,15 @@ const AdminLogin = () => {
   // Validate form inputs
   const validateForm = () => {
     if (!email.trim()) {
-      setError('Email is required')
+      setError(t('auth.emailRequired'))
       return false
     }
     if (!password.trim()) {
-      setError('Password is required')
+      setError(t('auth.passwordRequired'))
       return false
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email address')
+      setError(t('auth.invalidEmail'))
       return false
     }
     return true

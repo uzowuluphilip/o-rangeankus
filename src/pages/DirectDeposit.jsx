@@ -17,7 +17,7 @@ import { ArrowDownToLine, Sparkles, Lock, HelpCircle } from 'lucide-react'
 
 // Helper function to generate routing number from user ID if not provided
 const generateRoutingNumber = (userId) => {
-  if (!userId) return 'Loading...'
+  if (!userId) return 'LOADING'
   return '02' + String(userId).padStart(8, '0')
 }
 
@@ -40,8 +40,8 @@ const DirectDeposit = () => {
   }, [user])
   
   const [formData, setFormData] = useState({
-    routing_number: user?.routing_number || generateRoutingNumber(user?.user_id) || 'Loading...',
-    account_number: user?.account_number || 'Loading...',
+    routing_number: user?.routing_number || generateRoutingNumber(user?.user_id) || 'LOADING',
+    account_number: user?.account_number || 'LOADING',
     account_type: 'Checking',
     bank_name: 'O-rangeankus Bank & Trust'
   })
@@ -156,7 +156,7 @@ const DirectDeposit = () => {
                   <input
                     type="text"
                     className="form-control"
-                    value={user?.routing_number || generateRoutingNumber(user?.user_id) || 'Loading...'}
+                    value={user?.routing_number || generateRoutingNumber(user?.user_id) || t('common.loading')}
                     disabled
                     placeholder="N/A"
                     style={{
@@ -182,7 +182,7 @@ const DirectDeposit = () => {
                   <input
                     type="text"
                     className="form-control"
-                    value={user?.account_number || 'Loading...'}
+                    value={user?.account_number || t('common.loading')}
                     disabled
                     placeholder="N/A"
                     style={{

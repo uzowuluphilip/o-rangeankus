@@ -61,7 +61,8 @@
     "globalBanking": "Banco Global",
     "secureTrusted": "Seguro e Confiável",
     "backToHome": "Voltar para Início",
-    "or": "ou"
+    "or": "ou",
+    "confirmPasswordRequired": "Por favor confirme sua senha"
   },
   "dashboard": {
     "welcome": "Bem-vindo de volta, {{name}}!",
@@ -181,7 +182,9 @@
     "invalidResponse": "Resposta inválida do servidor",
     "failedLoadDashboard": "Falha ao carregar dados do painel",
     "tryAgain": "Tentar Novamente",
-    "contactSupport": "Contatar Suporte"
+    "contactSupport": "Contatar Suporte",
+    "failedLoadUsers": "Falha ao carregar usuários",
+    "failedLoadData": "Falha ao carregar dados"
   },
   "landing": {
     "heroTitle": "Banco Moderno na Palma da Sua Mão",

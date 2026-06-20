@@ -61,7 +61,8 @@
     "globalBanking": "全球银行",
     "secureTrusted": "安全可靠",
     "backToHome": "返回首页",
-    "or": "或"
+    "or": "或",
+    "confirmPasswordRequired": "请确认您的密码"
   },
   "dashboard": {
     "welcome": "欢迎回来，{{name}}!",
@@ -181,7 +182,9 @@
     "invalidResponse": "来自服务器的无效响应",
     "failedLoadDashboard": "加载仪表板数据失败",
     "tryAgain": "重试",
-    "contactSupport": "联系支持"
+    "contactSupport": "联系支持",
+    "failedLoadUsers": "加载用户失败",
+    "failedLoadData": "加载数据失败"
   },
   "landing": {
     "heroTitle": "掌上现代银行",

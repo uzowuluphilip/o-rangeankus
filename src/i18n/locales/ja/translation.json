@@ -61,7 +61,8 @@
     "globalBanking": "グローバルバンキング",
     "secureTrusted": "安全で信頼できる",
     "backToHome": "ホームに戻る",
-    "or": "または"
+    "or": "または",
+    "confirmPasswordRequired": "パスワードを確認してください"
   },
   "dashboard": {
     "welcome": "お帰りなさい、{{name}}!",
@@ -181,7 +182,9 @@
     "invalidResponse": "サーバーからの無効な応答",
     "failedLoadDashboard": "ダッシュボードデータの読み込みに失敗しました",
     "tryAgain": "もう一度試す",
-    "contactSupport": "サポートにお問い合わせ"
+    "contactSupport": "サポートにお問い合わせ",
+    "failedLoadUsers": "ユーザーのロードに失敗しました",
+    "failedLoadData": "データのロードに失敗しました"
   },
   "landing": {
     "heroTitle": "手のひらのモダンバンキング",

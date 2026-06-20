@@ -61,7 +61,8 @@
     "globalBanking": "Banca Globale",
     "secureTrusted": "Sicuro e Affidabile",
     "backToHome": "Torna a Home",
-    "or": "o"
+    "or": "o",
+    "confirmPasswordRequired": "Si prega di confermare la password"
   },
   "dashboard": {
     "welcome": "Benvenuto di nuovo, {{name}}!",
@@ -181,7 +182,9 @@
     "invalidResponse": "Risposta non valida dal server",
     "failedLoadDashboard": "Impossibile caricare i dati del pannello",
     "tryAgain": "Prova di Nuovo",
-    "contactSupport": "Contatta il Supporto"
+    "contactSupport": "Contatta il Supporto",
+    "failedLoadUsers": "Impossibile caricare gli utenti",
+    "failedLoadData": "Impossibile caricare i dati"
   },
   "landing": {
     "heroTitle": "Banca Moderna al Palmo della Tua Mano",

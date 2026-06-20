@@ -27,6 +27,7 @@
     "passwordHint": "Mindestens 6 Zeichen",
     "passwordMismatch": "Die Passwörter stimmen nicht überein",
     "confirmPassword": "Passwort bestätigen",
+    "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
     "firstName": "Vorname",
     "firstNameRequired": "Vorname ist erforderlich",
     "firstNamePlaceholder": "Klaus",
@@ -178,7 +179,9 @@
     "invalidResponse": "Ungültige Antwort vom Server",
     "failedLoadDashboard": "Fehler beim Laden des Dashboards",
     "tryAgain": "Erneut Versuchen",
-    "contactSupport": "Kundensupport kontaktieren"
+    "contactSupport": "Kundensupport kontaktieren",
+    "failedLoadUsers": "Benutzer konnten nicht geladen werden",
+    "failedLoadData": "Daten konnten nicht geladen werden"
   },
   "landing": {
     "heroTitle": "Modernes Banking auf deinen Fingertipps",

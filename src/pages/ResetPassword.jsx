@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useTheme } from '../context/ThemeContext'
 import { Lock, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react'
 import axiosInstance from '../api/axios'
@@ -17,6 +18,7 @@ import './Auth.css'
  * - Redirect to login on success
  */
 const ResetPassword = () => {
+  const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -61,19 +63,19 @@ const ResetPassword = () => {
 
   const validateForm = () => {
     if (!password.trim()) {
-      setError('Password is required')
+      setError(t('auth.passwordRequired'))
       return false
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long')
+      setError(t('auth.passwordMinLength'))
       return false
     }
     if (!confirmPassword.trim()) {
-      setError('Please confirm your password')
+      setError(t('auth.confirmPasswordRequired'))
       return false
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setError(t('auth.passwordMismatch'))
       return false
     }
     return true

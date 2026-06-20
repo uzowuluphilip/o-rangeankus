@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import LandingNavbar from '../components/LandingNavbar'
 import './PageInfo.css'
 
 const Terms = () => {
+  const { t } = useTranslation()
   return (
     <div className="info-page">
       <LandingNavbar />
@@ -11,37 +13,36 @@ const Terms = () => {
       <section className="info-hero">
         <div className="info-hero-content">
           <div className="info-hero-copy">
-            <span className="eyebrow">Terms of Service</span>
-            <h1>O-rangeankus Terms & Conditions</h1>
+            <span className="eyebrow">{t('terms.title')}</span>
+            <h1>{t('terms.brandName')} {t('terms.heading')}</h1>
             <p>
-              These terms describe how you may use the O-rangeankus platform, including account access,
-              transfer services, privacy expectations, and security responsibilities.
+              {t('terms.termsIntro')}
             </p>
             <div className="info-hero-actions">
               <Link to="/" className="btn btn-primary">
-                Back to Home
+                {t('auth.backToHome')}
               </Link>
             </div>
           </div>
 
           <div className="info-hero-card">
             <div className="info-card">
-              <h3>Important to know</h3>
+              <h3>{t('terms.importantToKnow')}</h3>
               <p>
-                By using O-rangeankus, you agree to our service terms, privacy standards, and transaction policies.
+                {t('terms.importantText')}
               </p>
               <div className="info-list">
                 <div>
-                  <span>Account use</span>
-                  <p>Keep your credentials secure and notify us of any unauthorized access.</p>
+                  <span>{t('terms.accountUseTitle')}</span>
+                  <p>{t('terms.accountUseDesc')}</p>
                 </div>
                 <div>
-                  <span>Transfers</span>
-                  <p>All transfers must comply with applicable laws and bank policies.</p>
+                  <span>{t('terms.transfersTitle')}</span>
+                  <p>{t('terms.transfersDesc')}</p>
                 </div>
                 <div>
-                  <span>Privacy</span>
-                  <p>We process data securely and only as needed to provide services.</p>
+                  <span>{t('terms.privacyTitle')}</span>
+                  <p>{t('terms.privacyDesc')}</p>
                 </div>
               </div>
             </div>
@@ -51,24 +52,21 @@ const Terms = () => {
 
       <section className="info-section terms-details">
         <div className="term-block">
-          <h2>1. Your Account</h2>
+          <h2>{t('terms.yourAccountTitle')}</h2>
           <p>
-            You are responsible for keeping your login details safe. If you suspect unauthorized access,
-            notify O-rangeankus immediately.
+            {t('terms.yourAccountDesc')}
           </p>
         </div>
         <div className="term-block">
-          <h2>2. Transfers & Payments</h2>
+          <h2>{t('terms.transfersPaymentsTitle')}</h2>
           <p>
-            We process transfers according to the selected service. Fees and delivery times may vary
-            depending on the destination and payment method.
+            {t('terms.transfersPaymentsDesc')}
           </p>
         </div>
         <div className="term-block">
-          <h2>3. Privacy & Security</h2>
+          <h2>{t('terms.privacySecurityTitle')}</h2>
           <p>
-            We use industry-standard encryption and monitor account activity to keep your information protected.
-            We never sell your personal data.
+            {t('terms.privacySecurityDesc')}
           </p>
         </div>
       </section>

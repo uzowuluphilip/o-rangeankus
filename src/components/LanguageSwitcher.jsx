@@ -33,7 +33,8 @@ const LanguageSwitcher = () => {
     { code: 'ru', name: 'Русский', short: 'RU', flag: '🇷🇺' },
     { code: 'ar', name: 'العربية', short: 'AR', flag: '🇸🇦' },
     { code: 'th', name: 'ไทย', short: 'TH', flag: '🇹🇭' },
-    { code: 'tr', name: 'Türkçe', short: 'TR', flag: '🇹🇷' }
+    { code: 'tr', name: 'Türkçe', short: 'TR', flag: '🇹🇷' },
+    { code: 'ro', name: 'Română', short: 'RO', flag: '🇷🇴' }
   ]
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0]

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { DollarSign, User, Search, Loader } from 'lucide-react'
@@ -12,6 +13,7 @@ import { DollarSign, User, Search, Loader } from 'lucide-react'
  * - Set specific balance amount
  */
 const AdminBalance = () => {
+  const { t } = useTranslation()
   const [users, setUsers] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
@@ -29,7 +31,7 @@ const AdminBalance = () => {
       setUsers(response.data.data || [])
       setError('')
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to load users')
+      setError(err.response?.data?.message || err.message || t('messages.failedLoadUsers'))
       setUsers([])
     } finally {
       setSearching(false)

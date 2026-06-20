@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import DashboardLayout from '../layouts/DashboardLayout'
 import axiosInstance from '../api/axios'
 import { formatShortDate } from '../utils/dateUtils'
 
 const AdminPendingTransfers = () => {
+  const { t } = useTranslation()
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -16,7 +18,7 @@ const AdminPendingTransfers = () => {
       setTransactions(resp.data.data || [])
       setError('')
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Error loading pending transactions')
+      setError(err.response?.data?.message || err.message || t('messages.failedLoadData'))
     } finally {
       setLoading(false)
     }
@@ -33,7 +35,7 @@ const AdminPendingTransfers = () => {
       setError('')
       await loadPendingTransactions()
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to approve transaction')
+      setError(err.response?.data?.message || err.message || t('messages.error'))
     } finally {
       setActionInProgress(null)
     }
@@ -46,7 +48,7 @@ const AdminPendingTransfers = () => {
       setError('')
       await loadPendingTransactions()
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to reject transaction')
+      setError(err.response?.data?.message || err.message || t('messages.error'))
     } finally {
       setActionInProgress(null)
     }
