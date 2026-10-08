@@ -12,7 +12,7 @@ import axios from 'axios'
 
 // Create axios instance with base URL (WITHOUT /api - it's in the endpoint paths)
 const axiosInstance = axios.create({
-  baseURL: 'https://api.orangeankus.com',
+  baseURL: 'https://api.orangeannkus.com',
   timeout: 10000,
   withCredentials: true,
   headers: {
