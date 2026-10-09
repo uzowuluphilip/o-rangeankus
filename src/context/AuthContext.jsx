@@ -1,23 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { getProfilePictureUrl } from '../utils/profilePictureUrl'
 
-/**
- * Helper function to build full profile picture URL
- * Converts relative paths like /uploads/profiles/image.jpg to full URLs
- */
-const getFullProfilePictureUrl = (relativePath) => {
-  if (!relativePath) return null
-  
-  // If already a full URL, return as-is
-  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
-    return relativePath
-  }
-  
-  // For Vite, access import.meta.env.VITE_API_URL
-  // Defaults to production API URL if not set
-  const apiBaseUrl = import.meta.env.VITE_API_URL || 'https://api.orangeankus.com'
-  
-  return `${apiBaseUrl}${relativePath}`
-}
 const AuthContext = createContext(null)
 
 export const AuthProvider = ({ children }) => {
@@ -41,9 +24,9 @@ export const AuthProvider = ({ children }) => {
             if (parsedUser.profile_picture) {
               // If it's just a filename (no slashes), construct the full path
               if (!parsedUser.profile_picture.includes('/') && parsedUser.profile_picture.includes('user_')) {
-                parsedUser.profile_picture = getFullProfilePictureUrl(`/uploads/profiles/${parsedUser.profile_picture}`)
+                parsedUser.profile_picture = getProfilePictureUrl(parsedUser.profile_picture)
               } else {
-                parsedUser.profile_picture = getFullProfilePictureUrl(parsedUser.profile_picture)
+                parsedUser.profile_picture = getProfilePictureUrl(parsedUser.profile_picture)
               }
             }
             setToken(storedToken)
@@ -75,9 +58,9 @@ export const AuthProvider = ({ children }) => {
     } else if (typeof url === 'string') {
       // If it's just a filename (no slashes), construct the full path
       if (!url.includes('/') && url.includes('user_')) {
-        fullUrl = getFullProfilePictureUrl(`/uploads/profiles/${url}`)
+        fullUrl = getProfilePictureUrl(url)
       } else {
-        fullUrl = getFullProfilePictureUrl(url)
+        fullUrl = getProfilePictureUrl(url)
       }
     }
     
@@ -96,7 +79,7 @@ export const AuthProvider = ({ children }) => {
     // Build full profile picture URL if it's a relative path
     const userWithFullUrl = {
       ...userData,
-      profile_picture: getFullProfilePictureUrl(userData?.profile_picture)
+      profile_picture: getProfilePictureUrl(userData?.profile_picture)
     }
     setUser(userWithFullUrl)
     setToken(authToken)

@@ -224,7 +224,7 @@ const Login = () => {
                   </p>
                   
                   <a 
-                    href="mailto:support@orangeankus.com"
+                    href="mailto:support@orangeannkus.com"
                     style={{
                       color: '#FF6B00',
                       fontWeight: 700,
@@ -235,7 +235,7 @@ const Login = () => {
                       gap: '6px'
                     }}
                   >
-                    📧 support@orangeankus.com
+                    📧 support@orangeannkus.com
                   </a>
                 </div>
 

@@ -345,7 +345,7 @@ shake              // Shake animation trigger
 1. ✅ All files created in `/src`
 2. Run build command: `npm run build`
 3. Deploy built files to production
-4. No environment variables needed (uses existing `api.orangeankus.com`)
+4. No environment variables needed (uses existing `api.orangeannkus.com`)
 
 ### Backend (Already done in previous conversation)
 1. Copy these files to live API:
@@ -364,7 +364,7 @@ shake              // Shake animation trigger
 
 3. Verify endpoints:
    ```bash
-   curl -X GET https://api.orangeankus.com/api/pin/check \
+  curl -X GET https://api.orangeannkus.com/api/pin/check \
      -H "Authorization: Bearer YOUR_TOKEN"
    ```
 

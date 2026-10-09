@@ -32,7 +32,7 @@ const Contact = () => {
               <div className="info-list">
                 <div>
                   <span>{t('contact.email')}</span>
-                  <p><a href="mailto:support@orangeankus.com">support@orangeankus.com</a></p>
+                  <p><a href="mailto:support@orangeannkus.com">support@orangeannkus.com</a></p>
                 </div>
                 <div>
                   <span>{t('contact.phone')}</span>

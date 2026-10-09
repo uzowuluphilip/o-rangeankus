@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import axiosInstance from '../../api/axios'
+import { getProfilePictureUrl } from '../../utils/profilePictureUrl'
 
 export default function ProfileModal({ isOpen, onClose, user, onUpdated }) {
   const [preview, setPreview] = useState(null)
@@ -10,45 +11,7 @@ export default function ProfileModal({ isOpen, onClose, user, onUpdated }) {
   const [imageError, setImageError] = useState(false)
   const inputRef = useRef()
 
-  // Build profile picture URL from filename
-  const buildProfileUrl = (filename) => {
-    if (!filename) return null
-    
-    let value = String(filename).trim()
-    console.log('[ProfileModal] Raw pic value:', value)
-    
-    // Remove protocol (http://, https://)
-    let extracted = value.replace(/^https?:\/\//, '')
-    console.log('[ProfileModal] After removing protocol:', extracted)
-    
-    // Remove known domains that might be stuck to filename
-    // Handles: api.orangeankus.comuser_22_123.jpg → user_22_123.jpg
-    extracted = extracted.replace(/^(api\.)?orangeankus\.com/i, '')
-    extracted = extracted.replace(/^localhost(:\d+)?/i, '')
-    console.log('[ProfileModal] After removing domains:', extracted)
-    
-    // If still has /profiles/ path, extract after it
-    if (extracted.includes('profiles/')) {
-      extracted = extracted.split('profiles/')[1] || extracted
-      console.log('[ProfileModal] After extracting from profiles/:', extracted)
-    }
-    
-    // Remove any remaining slashes and query strings
-    extracted = extracted.split('/').pop().split('?')[0]
-    console.log('[ProfileModal] Final extracted filename:', extracted)
-    
-    // Validate
-    if (!extracted || extracted === 'null' || extracted === 'undefined' || !extracted.includes('user_')) {
-      console.warn('[ProfileModal] Invalid filename:', extracted)
-      return null
-    }
-    
-    const url = `https://api.orangeankus.com/uploads/profiles/${extracted}`
-    console.log('[ProfileModal] Built URL:', url)
-    return url
-  }
-  
-  const existingProfileUrl = buildProfileUrl(user?.profile_picture)
+  const existingProfileUrl = getProfilePictureUrl(user?.profile_picture)
 
   if (!isOpen) return null
 

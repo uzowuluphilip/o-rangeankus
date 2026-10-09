@@ -6,6 +6,7 @@ import TransactionTable from '../components/TransactionTable'
 import ProfileModal from '../components/profile/ProfileModal'
 import axiosInstance from '../api/axios'
 import { useAuth } from '../context/AuthContext'
+import { getProfilePictureUrl } from '../utils/profilePictureUrl'
 import {
   Wallet,
   Send,
@@ -16,37 +17,6 @@ import {
   Inbox
 } from 'lucide-react'
 import './Dashboard.css'
-
-/**
- * Helper function to build profile picture URL from filename
- */
-const buildProfileUrl = (pic) => {
-  if (!pic) return null
-  
-  let value = String(pic).trim()
-  
-  // Remove protocol (http://, https://)
-  let filename = value.replace(/^https?:\/\//, '')
-  
-  // Remove known domains that might be stuck to filename
-  filename = filename.replace(/^(api\.)?orangeankus\.com/i, '')
-  filename = filename.replace(/^localhost(:\d+)?/i, '')
-  
-  // If still has /profiles/ path, extract after it
-  if (filename.includes('profiles/')) {
-    filename = filename.split('profiles/')[1] || filename
-  }
-  
-  // Remove any remaining slashes and query strings
-  filename = filename.split('/').pop().split('?')[0]
-  
-  // Validate
-  if (!filename || filename === 'null' || filename === 'undefined') {
-    return null
-  }
-  
-  return `https://api.orangeankus.com/uploads/profiles/${filename}`
-}
 
 /**
  * Dashboard Page
@@ -186,7 +156,7 @@ const Dashboard = () => {
             >
               {user?.profile_picture && !imgFailed ? (
                 <img 
-                  src={buildProfileUrl(user.profile_picture)} 
+                  src={getProfilePictureUrl(user.profile_picture)}
                   alt={`${user.first_name}'s profile`}
                   style={{
                     width: '100%',
