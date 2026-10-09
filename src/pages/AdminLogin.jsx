@@ -147,7 +147,7 @@ const AdminLogin = () => {
                   <input
                     type="email"
                     id="email"
-                    placeholder="admin@orangebank.com"
+                    placeholder="admin@orangeannkus.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}

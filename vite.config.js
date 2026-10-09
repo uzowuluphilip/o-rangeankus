@@ -8,7 +8,7 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'https://api.orangeankus.com',
+        target: 'https://api.orangeannkus.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

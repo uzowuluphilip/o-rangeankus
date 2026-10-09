@@ -77,7 +77,7 @@ export default function FrozenAccountModal({ isOpen, onLogout }) {
 
         {/* Contact info */}
         <p style={{ fontSize: 12, color: '#888', marginBottom: '1.5rem' }}>
-          Support Email: support@orangebank.com
+          Support Email: support@orangeannkus.com
           <br />
           Support Phone: 1-800-ORANGE-1
         </p>
